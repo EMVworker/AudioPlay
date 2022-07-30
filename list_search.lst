@@ -1,0 +1,17 @@
+{
+    "head": {
+        "name": "base_main",
+        "date": "30.05.2022",
+        "count": 2
+    },
+    "item": [
+        [
+            "d:/audio/CD518",
+            "famaly_(ä).wav"
+        ],
+        [
+            "c:/songs/CD12",
+            "Tea Party.wav"
+        ]
+    ]
+}

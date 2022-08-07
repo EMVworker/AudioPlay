@@ -55,7 +55,7 @@ class JsonData():
             self.error('load', msg)
         return self.data
 
-    def save(self, file):
+    def save(self, file=None):
         """ save data-struct in file
         file:   name of json-File
         """

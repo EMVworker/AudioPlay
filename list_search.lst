@@ -1,17 +1,82 @@
 {
     "head": {
-        "name": "base_main",
-        "date": "30.05.2022",
-        "count": 2
+        "name": "neuer Name xxxx",
+        "date": "05.08.2022 13:29",
+        "count": "9",
+        "freeNr": "4"
     },
-    "item": [
+    "data": [
         [
-            "d:/audio/CD518",
-            "famaly_(ä).wav"
+            "d:/audio/CD_Prince",
+            [
+                "prince_famaly_(ä).wav",
+                1,
+                23
+            ]
         ],
         [
-            "c:/songs/CD12",
-            "Tea Party.wav"
+            "d:/audio/CD_Prince",
+            [
+                "prince_children.wav",
+                23,
+                8
+            ]
+        ],
+        [
+            "d:/audio/CD_Prince",
+            [
+                "prince_rainbow $.wav",
+                9,
+                3
+            ]
+        ],
+        [
+            "d:/audio/test/CD_Zeppelin",
+            [
+                "Zepp_Holder the love.wav",
+                3,
+                4
+            ]
+        ],
+        [
+            "d:/audio/test/CD_Zeppelin",
+            [
+                "Zepp_No Quarter.wav",
+                1,
+                8
+            ]
+        ],
+        [
+            "d:/audio/test/CD_Zeppelin",
+            [
+                "Zepp_Tea Party.wav",
+                4,
+                9
+            ]
+        ],
+        [
+            "d:/audio/test/CD_Test",
+            [
+                "Test_Track1.wav",
+                3,
+                4
+            ]
+        ],
+        [
+            "d:/audio/test/CD_Test",
+            [
+                "Test_Track2.wav",
+                1,
+                8
+            ]
+        ],
+        [
+            "d:/audio/test/CD_Test",
+            [
+                "Test_Track3.wav",
+                4,
+                9
+            ]
         ]
     ]
 }

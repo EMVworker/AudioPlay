@@ -8,10 +8,13 @@
     "data": {
 	    	"CD_Prince":{
         		"path": "d:/audio/CD_Prince",
-        		"image":{
-	    			"cover": 2,
-            			"book":  5
-	     		},
+        		"image":[
+				"Cover001.jpg",
+				"Cover002.jpg",
+				"Book001.jpg",
+				"Book002.jpg",
+				"Book003.jpg"
+			],
         		"interpret": "Prince",
         		"album": "children of rainbow in (ä)",
         		"genre": "Jazz",
@@ -37,10 +40,13 @@
     		},
     		"CD_Zeppelin": {
         		"path": "d:/audio/test/CD_Zeppelin",
-        		"image": {
-	    			"cover": 0,
-            			"book":  0
-			},
+        		"image":[
+				"Cover001.jpg",
+				"Cover002.jpg",
+				"Book001.jpg",
+				"Book002.jpg",
+				"Book003.jpg"
+			],
         		"interpret": "Led Zeppelin",
         		"album": "cLive in Seattle",
         		"genre": "Rock",
@@ -66,10 +72,13 @@
     		},
     		"CD_Test": {
         		"path": "d:/audio/test/CD_Test",
-        		"image": {
-	    		"cover": 0,
-            		"book":  0
-			},
+        		"image":[
+				"Cover001.jpg",
+				"Cover002.jpg",
+				"Book001.jpg",
+				"Book002.jpg",
+				"Book003.jpg"
+			],
         		"interpret": "text_lreD_teSt",
         		"album": "cLive in Seattle",
         		"genre": "Rock",

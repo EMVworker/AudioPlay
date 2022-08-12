@@ -1,15 +1,19 @@
 {
-    "CD518": {
-        "path": "d:/audio/CD518",
-        "interpret": "Prince",
-        "album": "children of rainbow in (ä)",
-        "genre": "Jazz",
-        "year": 2001,
-        "import": "01.07.2022",
+	"path": "<unknow>",
+	"image":[
+		
+	],
+        "interpret": "<unknow>",
+        "album": "<unknow>",
+        "genre": "<unknow>",
+        "year": 0,
+        "import": "00.00.0000",
         "tracks": [
-            "famaly_(ü).wav",
-            "test.wav",
-            "rainbow $.wav"
+            		[
+                		"<unknow>",
+                		0,
+                		0
+            		]
+      
         ]
-    }
 }

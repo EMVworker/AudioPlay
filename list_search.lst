@@ -1,8 +1,8 @@
 {
     "head": {
         "name": "neuer Name xxxx",
-        "date": "12.08.2022 15:46",
-        "count": "9",
+        "date": "14.08.2022 15:01",
+        "count": "13",
         "freeNr": "4"
     },
     "data": [
@@ -76,6 +76,38 @@
                 "Test_Track3.wav",
                 4,
                 9
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/new_add",
+            [
+                "Take 1.wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/new_add",
+            [
+                "Take 3.wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/new_add",
+            [
+                "Take 4.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/new_add",
+            [
+                "Take 5.wav",
+                5,
+                0
             ]
         ]
     ]

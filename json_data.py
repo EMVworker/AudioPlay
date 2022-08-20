@@ -42,6 +42,7 @@ class JsonData():
     def load(self, file=''):
         """ load data-struct from file
         file:   name of json-File
+        return: data-struct 
         """
         if file == '':
             file = self._template

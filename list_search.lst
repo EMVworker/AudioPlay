@@ -1,81 +1,1401 @@
 {
     "head": {
         "name": "neuer Name xxxx",
-        "date": "14.08.2022 15:01",
-        "count": "13",
+        "date": "20.08.2022 02:19",
+        "count": "193",
         "freeNr": "4"
     },
     "data": [
         [
-            "d:/audio/CD_Prince",
+            "D:/_Test_CD/Archiv1/CD103",
             [
-                "prince_famaly_(ä).wav",
+                "Blind.wav",
                 1,
-                23
+                0
             ]
         ],
         [
-            "d:/audio/CD_Prince",
+            "D:/_Test_CD/Archiv1/CD103",
             [
-                "prince_children.wav",
-                23,
-                8
+                "Mr Jones.wav",
+                2,
+                0
             ]
         ],
         [
-            "d:/audio/CD_Prince",
+            "D:/_Test_CD/Archiv1/CD103",
             [
-                "prince_rainbow $.wav",
+                "Totally Nude.wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD103",
+            [
+                "Ruby Dear.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD103",
+            [
+                "(Nothing But) Flowers.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD103",
+            [
+                "The Democratic Circus.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD103",
+            [
+                "The Facts of Life.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD103",
+            [
+                "Mommy Daddy You and I.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD103",
+            [
+                "Big Daddy.wav",
                 9,
-                3
+                0
             ]
         ],
         [
-            "d:/audio/test/CD_Zeppelin",
+            "D:/_Test_CD/Archiv1/CD103",
             [
-                "Zepp_Holder the love.wav",
-                3,
-                4
+                "Bill.wav",
+                10,
+                0
             ]
         ],
         [
-            "d:/audio/test/CD_Zeppelin",
+            "D:/_Test_CD/Archiv1/CD103",
             [
-                "Zepp_No Quarter.wav",
+                "Cool Water.wav",
+                11,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "American Girl.wav",
                 1,
-                8
+                0
             ]
         ],
         [
-            "d:/audio/test/CD_Zeppelin",
+            "D:/_Test_CD/Archiv1/CD33",
             [
-                "Zepp_Tea Party.wav",
-                4,
-                9
+                "Breakdown.wav",
+                2,
+                0
             ]
         ],
         [
-            "d:/audio/test/CD_Test",
+            "D:/_Test_CD/Archiv1/CD33",
             [
-                "Test_Track1.wav",
+                "Anything Thats Rock & Roll.wav",
                 3,
-                4
+                0
             ]
         ],
         [
-            "d:/audio/test/CD_Test",
+            "D:/_Test_CD/Archiv1/CD33",
             [
-                "Test_Track2.wav",
-                1,
-                8
-            ]
-        ],
-        [
-            "d:/audio/test/CD_Test",
-            [
-                "Test_Track3.wav",
+                "Listen To Her Heart.wav",
                 4,
-                9
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "I Need To Know.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Refugee.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Dont Do Me Like That.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Even The Losers.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Here Comes My Girl.wav",
+                9,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "The Waiting.wav",
+                10,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "You Got Lucky.wav",
+                11,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Dont Come Around Here No More.wav",
+                12,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "I Wont Back Down.wav",
+                13,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Runnin Down A Dream.wav",
+                14,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Free Fallin.wav",
+                15,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Learning To Fly.wav",
+                16,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Into The Great Wide Open.wav",
+                17,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Mary Janes Last Dance.wav",
+                18,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD33",
+            [
+                "Something In The Air.wav",
+                19,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Dirty Deeds Done Dirt Cheap.wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Love At First Feel.wav",
+                2,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Big Balls.wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Rocker.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Problem Child.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Theres Gonna Be Some Rockin.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Aint No Fun (Waiting Round To Be A Millionair.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Ride On.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv1/CD56",
+            [
+                "Squealer.wav",
+                9,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track01.wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track02.wav",
+                2,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track03.wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track04.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track05.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track06.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track07.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track08.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track09.wav",
+                9,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track10.wav",
+                10,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track11.wav",
+                11,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track12.wav",
+                12,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track13.wav",
+                13,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track14.wav",
+                14,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track15.wav",
+                15,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track16.wav",
+                16,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track17.wav",
+                17,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track18.wav",
+                18,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD130",
+            [
+                "Track19.wav",
+                19,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Bark At The Moon.wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Forever.wav",
+                2,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Now You See It (Now You Dont).wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Rock n Roll Rebel.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "So Tired.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Spiders.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Waiting For Darkness.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD205",
+            [
+                "Youre No Different.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T01.wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T02.wav",
+                2,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T03.wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T04.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T05.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T06.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T07.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T08.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T09.wav",
+                9,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/CD537",
+            [
+                "Life Expectancy D01T10.wav",
+                10,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 1.wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 2.wav",
+                2,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 3.wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 4.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 5.wav",
+                5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 6.wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 7.wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 8.wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 9.wav",
+                9,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 10.wav",
+                10,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 11.wav",
+                11,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 12.wav",
+                12,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 13.wav",
+                13,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 14.wav",
+                14,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 15.wav",
+                15,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 16.wav",
+                16,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 17.wav",
+                17,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 18.wav",
+                18,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 19.wav",
+                19,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 20.wav",
+                20,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 21.wav",
+                21,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 22.wav",
+                22,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 23.wav",
+                23,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 24.wav",
+                24,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 25.wav",
+                25,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 26.wav",
+                26,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 27.wav",
+                27,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 28.wav",
+                28,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 29.wav",
+                29,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 30.wav",
+                30,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 31.wav",
+                31,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 32.wav",
+                32,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 33.wav",
+                33,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 34.wav",
+                34,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 35.wav",
+                35,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 36.wav",
+                36,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 37.wav",
+                37,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 38.wav",
+                38,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 39.wav",
+                39,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 40.wav",
+                40,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 41.wav",
+                41,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 42.wav",
+                42,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 43.wav",
+                43,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 44.wav",
+                44,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 45.wav",
+                45,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 46.wav",
+                46,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 47.wav",
+                47,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 48.wav",
+                48,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 49.wav",
+                49,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 50.wav",
+                50,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 51.wav",
+                51,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 52.wav",
+                52,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 53.wav",
+                53,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 54.wav",
+                54,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 55.wav",
+                55,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 56.wav",
+                56,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 57.wav",
+                57,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 58.wav",
+                58,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 59.wav",
+                59,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 60.wav",
+                60,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 61.wav",
+                61,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 62.wav",
+                62,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 63.wav",
+                63,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 64.wav",
+                64,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 65.wav",
+                65,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 66.wav",
+                66,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 67.wav",
+                67,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 68.wav",
+                68,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 69.wav",
+                69,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 70.wav",
+                70,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 71.wav",
+                71,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 72.wav",
+                72,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 73.wav",
+                73,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 74.wav",
+                74,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 75.wav",
+                75,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 76.wav",
+                76,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 77.wav",
+                77,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 78.wav",
+                78,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 79.wav",
+                79,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 80.wav",
+                80,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 81.wav",
+                81,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 82.wav",
+                82,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 83.wav",
+                83,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 84.wav",
+                84,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 85.wav",
+                85,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 86.wav",
+                86,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 87.wav",
+                87,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 88.wav",
+                88,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 89.wav",
+                89,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 90.wav",
+                90,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 91.wav",
+                91,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 92.wav",
+                92,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 93.wav",
+                93,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 94.wav",
+                94,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 95.wav",
+                95,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 96.wav",
+                96,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 97.wav",
+                97,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv3/CD990",
+            [
+                "Take 98.wav",
+                98,
+                0
             ]
         ],
         [
@@ -90,7 +1410,7 @@
             "D:/_Test_CD/Archiv3/new_add",
             [
                 "Take 3.wav",
-                3,
+                2,
                 0
             ]
         ],
@@ -98,7 +1418,7 @@
             "D:/_Test_CD/Archiv3/new_add",
             [
                 "Take 4.wav",
-                4,
+                3,
                 0
             ]
         ],
@@ -106,7 +1426,127 @@
             "D:/_Test_CD/Archiv3/new_add",
             [
                 "Take 5.wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "Careful With The Axe [Deep Freeze Mice].wav",
+                1,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "City Of People [The Creeps].wav",
+                2,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "Dont Need Your Loving [Choclate Watch Band].wav",
+                3,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "French Blues [Black Hollies].wav",
+                4,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "Greenfuz [Randy Alveny and Green Fuz].wav",
                 5,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "Greenfuz [The Cramps].wav",
+                6,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "How Do You Know [Lyres].wav",
+                7,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "How Do You Know2 [Lyres].wav",
+                8,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "Im A Man [Yard Trauma].wav",
+                9,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "On The Run [The Cynics].wav",
+                10,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "On Thousand Lies [Yard Trauma].wav",
+                11,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "She Cracked2 [Modern Lovers] .wav",
+                12,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "There Will Be No Next Time [The Kits].wav",
+                13,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "Theres She Goes Again [The Velevet Underground].wav",
+                14,
+                0
+            ]
+        ],
+        [
+            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
+            [
+                "What I Like About You [Romantics].wav",
+                15,
                 0
             ]
         ]

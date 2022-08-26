@@ -9,6 +9,7 @@ import os
 import copy
 import logging
 import shutil
+#from enum import Enum
 from json_data import JsonData
 from json_data import json_show
 
@@ -16,6 +17,16 @@ from json_data import json_show
 class SongList():
     """ json-format for data creation
     """
+    class INI():
+        """ app paramter
+        """
+        cd_info  = 'CDInfo.txt'
+        cd_index = 'CDIndex.txt'
+        cd_text = 'CD'
+        cd_max  = 10000
+        cd_min  = 1
+
+
     def __init__(self, log_file = 'report.log'):
         """ init
         Set the data-struct
@@ -39,24 +50,44 @@ class SongList():
         for titel in self._base.data['data'][cd_]['tracks']:
             val.append(titel[0])
         if name is not None:
-            #print('>>> _titel:', val, name)
-            index = val.index(name)
-            val = self._base.data['data'][cd_]['tracks'][index]
+            try:
+                index = val.index(name)
+                val = self._base.data['data'][cd_]['tracks'][index]
+            except ValueError:
+                val = ['[ERROR]: unknow track "' + name + '"', 0, 0]
+                self.error('_titel_list', '[ERROR]: track:"' + name +\
+                           '" not in CD:"' + cd_ +'"', False)
+                #print('>>> _titel:', val, cd_)
         return val
 
 
-    def _head_edit(self, lst, file=None, free_nr=None):
+    def split_name_int(self, text):
+        """ split text and integer (text, number)
+        text:   text with numbers
+        result: text split from numbers (text, numbers)
+        """
+        numb = ''
+        name = ''
+        for chr_ in text:
+            if chr_.isdigit() is True:
+                numb = numb + chr_
+            else:
+                name = name + chr_
+        return name, numb
+
+
+    def _head_edit(self, lsttyp, file=None, free_nr=None):
         """ edit head-section
-        lst:    list-typ: list=Songlist, base=CD Data-Base
+        lsttyp: list-typ: list=Songlist, base=CD Data-Base
         file:   name of file
         freeNr: next free list-number
         """
         if file is not None:
-            lst.data['head']['name'] = file
-        lst.data['head']['date'] = self.get_time()
-        lst.data['head']['count'] = str(len(lst.data['data']))
+            lsttyp.data['head']['name'] = file
+        lsttyp.data['head']['date'] = self.get_time()
+        lsttyp.data['head']['count'] = str(len(lsttyp.data['data']))
         if free_nr is not None:
-            lst.data['head']['freeNr'] = free_nr
+            lsttyp.data['head']['freeNr'] = free_nr
 
 
     #*************************************************************************
@@ -163,57 +194,61 @@ class SongList():
 
     #*************************************************************************
     #*************************** base-Function *******************************
-    def _base_info_check(self, path, info_file='CDInfo.txt'):
+    def _base_info_check(self, path):
         """ check the cd-root and the CDInfo-File
         path:       path to the cd
-        info_file:  Name of InfoFile
         result:     True = done, Other = ERROR-message
         """
         state =True
         file_list = os.listdir(path)# list all files & paths
         del_list = copy.deepcopy(file_list)
         #--- read CDInfo.txt ---
-        home = path + '/' + info_file
+        home = path + '/' + self.INI.cd_info
         self._info.load(home)
         home = path + '/'
-        #--- check head is empty ---
-        if self._info.data['interpret'] == '<unknow>':
-            if self._info.data['album'] == '<unknow>':
-                self.error('base_info_prep', \
-                         '[[WARNING _base_info_prep]: edit head-section'+\
-                        '(interpret,album....): ' +  path, False)
-        #--- check tracks in CDInfo-File ---
-        for track in self._info.data['tracks']:
-            if (track[0] in file_list) is False:
-                self.error('base_info_check', 'tracks not found: ' +\
-                           home + track[0], False)
-            else:
-                del_list.remove(track[0])
-        #--- check images in CDInfo-File ---
-        for image in self._info.data['image']:
-            if (image in file_list) is False:
-                self.error('base_info_check', 'Image not found:' + home + image, False)
-            else:
-                if image in del_list:
-                    del_list.remove(image)
-        #--- clear del-list ---
-        for delin in ['CDIndex.txt', 'CDInfo.txt']:
-            if delin in del_list:
-                del_list.remove(delin)
-        #--- check if files unuesd ---
-        for file in del_list:
-            #--- unknows files ---
-            self.error('base_info_check', 'unknow files:' + home + file, False)
+        #--- check path is available ---
+        if os.path.isdir(self._info.data['path']):
+            #print('>>> _base_info_check:',self._info.data['path'],'\n')
+            #--- check head is empty ---
+            if self._info.data['interpret'] == '<unknow>':
+                if self._info.data['album'] == '<unknow>':
+                    self.error('base_info_prep', \
+                             '[WARNING]: edit head-section'+\
+                            '(interpret,album....): ' +  path, False)
+            #--- check tracks in CDInfo-File ---
+            for track in self._info.data['tracks']:
+                if (track[0] in file_list) is False:
+                    self.error('base_info_check', '[ERROR]: tracks not found: ' +\
+                               home + track[0], False)
+                else:
+                    del_list.remove(track[0])
+            #--- check images in CDInfo-File ---
+            for image in self._info.data['image']:
+                if (image in file_list) is False:
+                    self.error('base_info_check', '[WARNING]: Image not found:' +\
+                               home + image, False)
+                else:
+                    if image in del_list:
+                        del_list.remove(image)
+            #--- clear del-list ---
+            for delin in [self.INI.cd_index, self.INI.cd_info]:
+                if delin in del_list:
+                    del_list.remove(delin)
+            #--- check if files unuesd ---
+            for file in del_list:
+                #--- unknows files ---
+                self.error('base_info_check', '[WARNING]: unknow files:' + home + file, False)
+        else:
+            self.error('base_info_check', '[ERRORR]: unknow CD-Path in "CDInfo.txt":' +\
+                       home + 'CDInfo.txt = ' + self._info.data['path'], False)
         return state
 
 
-    def _base_info_conv(self, path, info_file='CDIndex.txt'):
+    def _base_info_conv(self, path):
         """ tranfer "info_file" in "CDInfo.txt" format
         path:       path to the cd
-        info_file:  name of infoFile
         result:     True = done, Other = ERROR-message
         """
-        self._list
         state = True
         error = False
         def line_cdindex(line, key, sep1='=', sep2='#'):
@@ -236,7 +271,7 @@ class SongList():
         info_list ={'path':'CDDir', 'interpret':'Interpret', 'album':'Album',
                   'genre':'Genre', 'year':'Jahr' }
         #--- read index as line-array ---
-        with open(path + '/' + info_file) as row:
+        with open(path + '/' + self.INI.cd_index) as row:
             cd_index = row.readlines()
         row.close()
         #--- convert CDIndex to CDInfo ---
@@ -252,11 +287,12 @@ class SongList():
                             val[1] = val[1][0:-1]
                         val[1] = val[1].replace(chr(92), '/')
                         if os.path.isdir(val[1]) is not True:
-                            #print('>>>_base_info_conv:', val[1])
-                            state = '[[ERROR _base_info_conv]: directory not available: ' + val[1]
+                            state = '[ERROR _base_info_conv]: directory not available: ' + val[1]
                             error = True
-                        if not error:
-                            self._info.data[key] = val[1]
+                    if not error:
+                        self._info.data[key] = val[1]
+        #print ('>>> info_conv:', self._info.data, '\n', cd_index)
+        #assert False
         #--- image conversion ---
         val =[]
         for line in cd_index:
@@ -269,7 +305,6 @@ class SongList():
         for line in cd_index:
             if line.find('Track') == 0:
                 tmp = line_cdindex(line, 'Track')
-                #print ('>>> line_cdindex:', tmp)
                 val.append( [tmp[1], int(tmp[2]), 0] )
         self._info.data['tracks'] = val
         return state
@@ -305,34 +340,36 @@ class SongList():
             #--- infos convertieren ---
             self._info.data['path'] = path
             for key in val:
-                #print('>>> _base_info_prep:', self._info.data[key])
                 self._info.data[key] = '<unknow>'
-                #--- tracks listen ---
-                val =[]
-                i=1
-                for file in file_list:
-                    if file_find('track', file) > 0:
-                        val.append([file, i, 0])
-                        i += 1
-                        self._info.data['tracks'] = val
-                #--- image listen ---
-                #file_list.sort(reverse=True)
-                for file in file_list:
-                    if file_find('image', file) > 0:
-                        self._info.data['image'].append(file)
+            #--- tracks listen ---
+            val =[]
+            self._info.data['tracks'].clear()
+            i=1
+            for file in file_list:
+                if file_find('track', file) > 0:
+                    val.append([file, i, 0])
+                    i += 1
+                    self._info.data['tracks'] = val
+            #--- image listen ---
+            #file_list.sort(reverse=True)
+            self._info.data['image'].clear()
+            for file in file_list:
+                if file_find('image', file) > 0:
+                    self._info.data['image'].append(file)
+                    #print('>>> _base_info_prep:', file, key, '\n')
         else:
-            state = '[[ERROR _base_info_prep]: no files available: ' +  path
+            state = '[ERROR _base_info_prep]: no files available: ' +  path
         return state
 
 
-    def _base_info_update(self, name, info_file='CDInfo.txt'):
+    def _base_info_update(self, name):
         """ update CDInfo.txt with base-list
         name:  edit-name = cd-path
         result: True = done, Other = ERROR-message
         """
         state = True
         path_name = name.split('/')
-        info_file = name + '/' + info_file
+        info_file = name + '/' + self.INI.cd_info
         self._info.load(info_file)
         self._info.data = self._base.data['data'][path_name[-1]]
         if state is True:
@@ -363,8 +400,9 @@ class SongList():
                             break
                 else:
                     #--- Import head from "CDInfo.txt""
-                    save = False 
-                    state = self._info.load(name + '/' + 'CDInfo.txt')
+                    save = False
+                    state = self._info.load(name + '/' + self.INI.cd_info)
+                    state['path'] = name
                 self._base.data['data'].update({path_name[-1]:state})
                 if save is True:
                     state = self._info.save(name + '/CDInfo.txt')
@@ -373,7 +411,7 @@ class SongList():
             else:
                 state = '[ERROR base_edit(add)]: in "' + name + '" no files available'
         else:
-            state = '[[ERROR base_edit(add)]: path not available: ' + name
+            state = '[ERROR base_edit(add)]: path not available: ' + name
         return state
 
 
@@ -390,9 +428,9 @@ class SongList():
                 shutil.rmtree(name)
                 state = True
             except FileNotFoundError:
-                state = '[[ERROR base_edit(del)]: path not available: ' + name
+                state = '[ERROR base_edit(del)]: path not available: ' + name
         else:
-            state = '[[ERROR base_edit(del)]: path not in base-list: ' + name
+            state = '[ERROR base_edit(del)]: path not in base-list: ' + name
         return state
 
 
@@ -415,7 +453,7 @@ class SongList():
                     break
              #--- update CDInfo.txt ---
         else:
-            state = '[[ERROR base_edit(head)]: path not in base-list: ' + name
+            state = '[ERROR base_edit(head)]: path not in base-list: ' + name
         return state
 
 
@@ -442,7 +480,7 @@ class SongList():
                             os.rename(name + '/' + val, name + '/' + par)
                             state = True
                         except FileNotFoundError:
-                            state = '[[ERROR base_edit(track)]: \
+                            state = '[ERROR base_edit(track)]: \
                              file not available: ' +  name + '/' + val
                     #- del track
                     else:
@@ -452,24 +490,45 @@ class SongList():
                             os.remove(name + '/' + val)
                             state = True
                         except FileNotFoundError:
-                            state = '[[ERROR base_edit(track)]: \
+                            state = '[ERROR base_edit(track)]: \
                                 file not available: ' + name + '/' + val
                 else:
-                    state = '[[ERROR base_edit(track)]: no new track-name'
+                    state = '[ERROR base_edit(track)]: no new track-name'
             else:
-                state = '[[ERROR base_edit(track)]: track "' + val +\
+                state = '[ERROR base_edit(track)]: track "' + val +\
                         '" not in base-list: ' +  name
         else:
-            state = '[[ERROR base_edit(image)]: path not in base-list: ' + name
+            state = '[ERROR base_edit(image)]: path not in base-list: ' + name
         return state
 
 
-    def _base_import_cd(self, source, target):
+    def _base_import_cd(self, source, target, auto=True):
         """ import cds-path(with wav/image/CDinfo.txt) to target
-        source:  home from source
-        target:  target of the import
+        source:  source-path
+        target:  target-path
+        dirs:    CD-Dir
+        auto:    True= automatic CD-Name, False= Source CD-Name
         result:  True = done, Other = ERROR-message
         """
+        def copy_cdpath(cpy_from, cpy_to, dirs):
+            state = True
+            #--- copy cd-path ---
+            length = len(os.listdir(home))
+            if length > 1:
+                cpy_from = cpy_from + '/' + dirs
+                if auto is True:
+                    cd_dir = cpy_to + '/' + self._base_find_freecd()
+                else:
+                    cd_dir = cpy_to + '/' + dirs
+                try:
+                    shutil.move(cpy_from, cd_dir)
+                    state = self.base_edit('add', cd_dir, None)
+                    #print('>>>>_base_import_cd:',cpy_from, cd_dir)
+                except IOError as msg:
+                    state = '[ERROR _base_import_cd]: file accsess denied: '+ str(msg)
+                else:
+                    state = '[ERROR _base_import_cd]: no audio-files available'
+            return state
         state =True
         file_list = os.listdir(source)# list all files & paths
         count = len(os.listdir(source))
@@ -479,16 +538,10 @@ class SongList():
             for i, dirs in enumerate(file_list):
                 home = source + '/' + dirs
                 if os.path.isdir(home):
-                    if os.path.isfile(home + '/' + 'CDInfo.txt'):
-                        length = len(os.listdir(home))
-                        if length > 1:
-                            try:
-                                shutil.move(home, target)
-                            except IOError as msg:
-                                state = '[ERROR _base_import_cd]: file accsess denied: ', msg
-                            self.show_prozess(i, count, home )
-                        else:
-                            state = '[ERROR _base_import_cd]: no audio-files available'
+                    #--- copy if CDInfo.txt available ---
+                    if os.path.isfile(home + '/' + self.INI.cd_info):
+                        state = copy_cdpath(source, target, dirs)
+                        self.show_prozess(i, count, home )
                     else:
                         state = '[ERROR _base_import_cd]: no "CDInfo.txt" available'
                 else:
@@ -498,76 +551,130 @@ class SongList():
         return state
 
 
-    def _base_build_cdinfo(self, save=True):
+    def _base_find_freecd(self):
+        """ find the next free-cd-path/name in base-list
+        result:next free CD-Name
+        """
+        next_numb = self.INI().cd_min
+        while next_numb <= self.INI().cd_max:
+            if self.INI.cd_text + str(next_numb) in self._base.data['data']:
+                next_numb += 1
+            else:
+                break
+        return self.INI.cd_text + str(next_numb)
+
+
+    def base_build_cdinfo(self, save=True):
         """ build / check the "CDInfo.txt" for all cds in init.path
         save_info:  save CDInfo.txt in cd path
         result:     (list of all available cds (cd_dir), True / Errors)
         """
-        #--- built make-list ----
         cd_dir = []
+         #--- scan cd-paths ----
         for home in self.get_init('cd'):#- all cd-roots from init-file
             for cds in os.listdir(home):#- cd-path in roots
-                cd_dir.append(home + '/' + cds)
+                if os.path.isdir(home + '/' + cds):
+                    cd_dir.append(home + '/' + cds)
+                else:
+                    self.error('base_build_cdinfo',\
+                    '[ERROR]: wrong cd-path: "' +  home + '/' + cds +\
+                    '". Only directories without files allowed (AudioPlay.ini.cd)', False)
         count = len(cd_dir)
+        #print('>>> base_build_cdinfo:', cd_dir, '\n')
         #--- great base_list ---
         #self._base.data['data'].clear()# clear base-list
         for i, path in enumerate(cd_dir):
             state = None
             #------------ greate "CDInfo.txt" file ---------------
             #--- new info-file 'CDInfo.txt' ---
-            if os.path.isfile(path + '/' + 'CDInfo.txt'):
+            if os.path.isfile(path + '/' + self.INI.cd_info):
                 state = self._base_info_check(path)
             else:
                 #--- old info-file 'CDIndex.txt' ---'
-                if os.path.isfile(path + '/' + 'CDIndex.txt'):
+                if os.path.isfile(path + '/' + self.INI.cd_index):
                     state = self._base_info_conv(path)
                 else:
                     #--- no info-file ---
                     state = self._base_info_prep(path)
                     if state is True:
                         self.error('base_info_prep',\
-                        '[[WARNING _base_info_prep]: edit head-section'+\
+                        '[WARNING]: edit head-section'+\
                         '(interpret,album....): ' +  path, False)
-            #print ('>>> base_make:', path, ':', state)
-            self.show_prozess(i, count, cd_dir[i] + ':' + str(state) )
+            self.show_prozess(i, count, cd_dir[i] + ': <base_build_info> ' + str(state) )
             if state is not True:
                 self.error('base_build_cdinfo', state, False)
             else:
                 #--- save CDInfo ---
                 if save is True:
-                    self._info.save(path + '/CDInfo.txt')
+                    self._info.save(path + '/' + self.INI.cd_info)
         return cd_dir
 
 
-    def base_make(self, save=True):
+    def base_make(self, save=True, sort = False):
         """ make a new "base_main.bas" list for all avaiable cds with "CDInfo.txt"
         save:  save the new "base_main.bas"
+        sort:  True = sort after interpret, sort after CD-Name
         result: True = done, Other = ERROR-message
         """
         state = True
         #--- great base_list ---
         self.error('base_make', '################### make a new "base_main.bas" '+\
                                 '###################', False)
-        self.error('base_make', '*************           check all CDs          '+\
-                                '*************', False)
-        cd_list = self._base_build_cdinfo()
+        cd_list = self.base_build_cdinfo()
         count = len(cd_list)
         self._base.data['data'].clear()# clear base-list
         for i, path in enumerate(cd_list):
             #------------ greate "base_main.bas ---------------
-            if os.path.isfile(path + '/' + 'CDInfo.txt'):
+            if os.path.isfile(path + '/' + self.INI.cd_info):
                 #state = self._base_info_check(path)
                 self._base_add_cd(path, val=None, save=True)
-                self.show_prozess(i, count, cd_list[i] + ': added')
-        self.error('base_make', '###################         end of make        '+\
-                                '###################', False)
+                self.show_prozess(i, count, cd_list[i] + ': <base_make> done')
+        #--- check "base_main" for duplicate ---
+        cd_list = []
+        for cd_ in self._base.data['data']:
+            cd_list.append([ cd_, self._base.data['data'][cd_]['path'] ])
+        for pos, cd_ in enumerate(cd_list):
+            if str(cd_[1]).find(cd_[0]) < 0:
+                self.error('base_make', '[FATAL]: ' + \
+                    'CD-Name:"' + cd_[0] + '" not in CD-Path:"' + cd_[1] + '"', False)
+        #--- sort base_list after interpreter / CD-Path ---
+        cd_list.clear()
+        base_list = {}
+        for cd_ in self._base.data['data']:
+            #--- built sort_key ---
+            if sort is True:
+                sort_key = self._base.data['data'][cd_]['interpret'] + ':' +\
+                            self._base.data['data'][cd_]['album']
+            else:
+                txt, numb = self.split_name_int(cd_)
+                if numb.isdecimal():
+                    numb =int(numb)
+                else:
+                    numb = 10000
+                sort_key = [txt,numb]
+                #print('>>> base:', txt, numb)
+            #--- add sort_key + data ---
+            cd_list.append([sort_key, cd_])
+        cd_list.sort() #- Liste sortieren
+        #------ copy the base_list -------
+        base_list.update({'head':self._base.data['head']})
+        base_list.update({'data':{}})
+        for cd_ in cd_list:
+            cd_dat = self._base.data['data'][cd_[1]]
+            self._base.data['data'].pop(cd_[1])
+            base_list['data'].update({cd_[1]:cd_dat})
+        #print('>>> sort=', base_list, '\n')#self._base.data['data'], '\n')
+        self._base.data = copy.deepcopy(base_list)
+        #json_show(self._base.data)
         #---  edit base-head ---
         self._base.data['head']['date'] = self.get_time()
         self._base.data['head']['count'] = str(count)
-        self._base.data['head']['freeNr'] = 'CD' + str(count+1)
+        self._base.data['head']['freeNr'] = self._base_find_freecd()
         #--- save base-list ---
         if save is True:
             self._base.save()
+        self.error('base_make', '###################         end of make        '+\
+                                '###################', False)
         return state
 
 
@@ -604,13 +711,10 @@ class SongList():
                 state = self._base_info_update(par[1])
         if par[0] == 'import':
             state = self._base_import_cd(par[1], par[2])
-            # if state is True:
-            #     state = self._base_info_update(par[1])
         #--- save base-list ---
         if save is True:
             self._base.save()
-        #--- report message ---
-        if state is not True:
+        else:
             self.error('base-list', state, False)
         return state
 
@@ -618,55 +722,92 @@ class SongList():
     #**************************************************************************
     #************************** list-methoden *********************************
     def list_get(self, numb, typ):
-        """ get info(path,image,interpret...) from list-entry
-        numb:   Number of list entry
-        typ:    Info-Typ: play=full path, imgae,interpret, album, genre, year
-                          import, track, track_list, pos, calls
+        """ get info from play-list-entry
+        numb: Number of list entry, None = list of all available items
+        typ:  Info-Typ: play = full path for Audio-Player
+                        name = naming of the cd [interpret, album, titel, track-nr]
+                        info = advanced infos [calls, genre, year, import(date)]
+                        all  = naming & advanced infos
         """
-        path = self._list.data['data'][numb][0]
-        cd_ = str(path).split('/')[-1]
-        track = self._list.data['data'][numb][1][0]
-        #print('>>> list_get(path/track):',path,track,cd_) 
-        if typ == 'play':
-            val = path + '/' + track
-        if typ == 'interpret':
-            val = self._base.data['data'][cd_]['interpret']
-        if typ == 'album':
-            val = self._base.data['data'][cd_]['album']
-        if typ == 'genre':
-            val = self._base.data['data'][cd_]['genre']
-        if typ == 'year':
-            val = self._base.data['data'][cd_]['year']
-        if typ == 'import':
-            val = self._base.data['data'][cd_]['import']
-        if typ == 'track':
-            val = track
-        if typ == 'track_list':
-            val = self._titel_list(cd_)
-        if typ == 'pos':
-            #print('>>> list_get:', track)
-            val = self._titel_list(cd_, track)[1]
-        if typ == 'call':
-            val = self._titel_list(cd_, track)[2]
+        item = []
+        def basic_data(numb):
+            path = self._list.data['data'][numb][0]
+            cd_ = str(path).split('/')[-1]
+            track = self._list.data['data'][numb][1][0]
+            return path, cd_, track
+        def group_name(item):
+            item.append(self._base.data['data'][cd_]['interpret'])
+            item.append(self._base.data['data'][cd_]['album'])
+            #print('>>> list_get:',cd_,track,'\n')
+            item.append(track)
+            item.append(self._titel_list(cd_, track)[1])
+            return item
+        def group_info(item):
+            item.append(self._titel_list(cd_, track)[2])
+            item.append(self._base.data['data'][cd_]['genre'])
+            item.append(self._base.data['data'][cd_]['year'])
+            item.append(self._base.data['data'][cd_]['import'])
+            return item
+        def group_all(item):
+            group_name(item)
+            group_info(item)
+            return item
+        if numb is None:
+            #--- list with all items of list ---
+            val = []
+            for i, j in enumerate(self._list.data['data']):
+                item = []
+                path, cd_, track = basic_data(i)
+                if  typ == 'name':
+                    group_name(item)
+                if  typ == 'info':
+                    group_info(item)
+                if  typ == 'all':
+                    group_all(item)
+                if typ == 'play':
+                    item = path + '/' + track
+                val.append(item)
+                #del(j)
+        else:
+             #--- with one items of list ---
+            path, cd_, track = basic_data(numb)
+            if typ == 'name':
+                val = group_name(item)
+            if typ == 'info':
+                val = group_info(item)
+            if typ == 'all':
+                val = group_all(item)
+            if typ == 'play':
+                val = path + '/' + track
         return val
 
 
     def list_edit(self, mode, par1=None, par2=None):
         """ edit(clear,add...) the list-format: [ path,[pos,calls] ]
-        mode:   function add,cd=append track(s) from base_list, del=remove track,
-                        clear=remove all tracks, ins=insert track before nr
-                        head=date & count & (name)
-        par1:   add=cd-name, del=list-nr
+        mode:   add  = added track to list (par1 = [ path,[pos,calls] ])
+                cd   = added all tracks from cd (par1 = path)
+                del  = remove track from list (par1 = list-nr)
+                clear= remove all tracks (no par.)
+                ins  = insert track before nr (par1 = [ path,[pos,calls], par2 = nr )
+                head = update date & count & name (par1 = name of list)
+        par1:   add,cd = cd-name, del=list-nr
         par2:   list-position
+        return: True or Errors
         """
+        state = True
         if mode =='clear':
             self._list.data['data'].clear()
         if mode == 'add':
             self._list.data['data'].append(par1)
         if mode == 'cd':
-            for titel in self._base.data['data'][par1]['tracks']:
-                add_items = [self._base.data['data'][par1]['path'], titel]
-                self._list.data['data'].append(add_items)
+            path = self._base.data['data'][par1]['path']
+            #print('>>>> list_edit:',path)
+            if os.path.isdir(path):
+                for titel in self._base.data['data'][par1]['tracks']:
+                    add_items = [self._base.data['data'][par1]['path'], titel]
+                    self._list.data['data'].append(add_items)
+            else:
+                state = '[ERROR list_edit]: directory is not available: '+ str(par1)
         if mode == 'del':
             self._list.data['data'][par1].clear()
         if mode == 'ins':
@@ -676,47 +817,60 @@ class SongList():
                 self._list.data['head']['name'] = par1
             self._list.data['head']['date'] = self.get_time()
             self._list.data['head']['count'] = str(len(self._list.data['data']))
+        return state
 
 
     def list_sort(self, typ, z_a=False):
         """ sort(interpreter,album...) the play-list
-        typ:    sort-function = interpret, album, genre, year, import
+        typ:    sort-function = interpret, album, genre, year, import, rand(random)
         value:  Keyword
-        a_z:    sort-direction
+        z_a:    sort-direction
+        return: True or Errors
         """
+        state = True
         sort_list = []
         key = None
-        #--- Selection of the sorting expression
+        #--- Selection of the sorting expression pos=3
         if typ == 'interpret':
-            key=['interpret', 'album', 'pos', 'genre', 'year', 'import']
+            key={'interpret':0, 'album':1, 'genre':5, 'year':6, 'import':7}
         if typ == 'album':
-            key=['album', 'interpret', 'pos', 'genre', 'year', 'import']
+            key={'album':1, 'interpret':0, 'genre':5, 'year':6, 'import':7}
         if typ == 'genre':
-            key=['genre', 'interpret', 'album', 'pos', 'year', 'import']
+            key={'genre':5, 'interpret':0, 'album':1, 'year':6, 'import':7}
         if typ == 'year':
-            key=['year', 'interpret', 'album', 'pos', 'genre', 'import']
+            key={'year':6, 'interpret':0, 'album':1, 'genre':5, 'import':7}
         if typ == 'import':
-            key=['import', 'interpret', 'album', 'pos', 'genre', 'year']
+            key={'import':7, 'interpret':0, 'album':1, 'genre':5, 'year':6}
+        if typ == 'rand':
+            key = True
         if key is None:
             self.error('list_sort', '[error] wrong parameter: ' + typ)
-        for i in range(0, len(self._list.data['data'])):
-            #print('>>> list_sort=', self._list.data['data'][i])
-            #--- built sort_key ---
-            sort_key = str(self.list_get(i,key[0])) + ':' + str(self.list_get(i,key[1])) +\
-            ':' + str(self.list_get(i,key[2])) + ':' +str( self.list_get(i,key[3])) +\
-            ':' + str(self.list_get(i,key[4])) + ':' + str(self.list_get(i,key[5]))
-            #--- add sort_key + data ---
-            sort_list.append([sort_key, self._list.data['data'][i]])
-        #--- sort-list save as playlist
-        sort_list.sort(reverse = z_a) #- Liste sortieren
+        if key != 'rand':
+            #--- sortieren als interpret, album, genre, year, import ---
+            for i in range(0, len(self._list.data['data'])):
+                #--- built sort_key ---
+                info = self.list_get(i,'all')
+                sort = ''
+                for j in key:
+                    sort = sort + str(info[key[j]]) + ':'
+                sort_key = [sort, int(info[3])]
+                #--- add sort_key + data ---
+                sort_list.append([sort_key, self._list.data['data'][i]])
+                #print('>>> sort=', sort_list , '\n')
+            #--- sort-list save as playlist
+            sort_list.sort(reverse = z_a) #- Liste sortieren
+        else:
+            #---------------- generate a random-list -------------------
+            pass
+        #------ copy the sort-list -------
         for i, val in enumerate(sort_list):
-            self._list.data['data'][i] = val
-            #print('>>> sort=', sort_list[i][0])
-        #json_show(db._list.data)
+            self._list.data['data'][i] = val[1]
+        return state
 
 
     def list_filter(self, typ, value, clear=True):
-        """ search(interpret,album...) in base-list after parameter
+        """ search(interpret,album...) in base-list after parameter and gerate
+            the search-list
         typ:    search-function = interpret, album, genre, year, import
         value:  Keyword
         clear:  Clear current list
@@ -725,16 +879,18 @@ class SongList():
             """ search in bas-list
             key:    key in cd-data
             val:    search-value
+            return: state True or Errors
             """
+            state = True
             cd_ = None
             if new is True:
-                self.list_edit('clear',cd_)
+                state = self.list_edit('clear',cd_)
             for cd_ in self._base.data['data']:
                 val = str(self._base.data['data'][cd_][key]).lower().find(str(search).lower())
                 if val >= 0:
-                    self.list_edit('cd',cd_)
+                    state = self.list_edit('cd',cd_)
             self.list_edit('head','neuer Name xxxx')
-            return True
+            return state
         val = None
         if typ == 'interpret':
             val = _base_search_cd(typ, value, clear)
@@ -757,25 +913,29 @@ if __name__ == '__main__':
     #json_show(db._base.data)
     # print(db._init.data)
     # print(db._info.data)
-    print ( db.base_make() )
-    db.list_filter('interpret', '')
+    print ( db.base_make() ,'<base_make>\n')
+    #json_show(db._base.data)
+    print (db.list_filter('album', ''),'<list_filter>\n')
     db.save('list')
     db.load('list')
-    #print(':', db.list_get(0, 'call') )
-    db.list_sort('import', False)
+    print( db.list_sort('interpret', False),'<list_sort>\n')
+    #json_show(db._list.data)
+    # for lst in db.list_get(None, 'all'):
+    #     print(lst)
     #----------- list_edit ---------------
-    # db.list_edit('clear')
-    # db.list_edit('cd', 'CD518')
-    # db.list_edit('del', 1)
-    # db.list_edit('add', ['c:/',['append Titel.wav',1,2]])
-    # db.list_edit('ins', ['d:/test/',['insert Titel.wav',3,4]],1)
+    db.list_edit('clear')
+    db.list_edit('cd', 'CD414')
+    db.list_edit('del', 1)
+    db.list_edit('add', ['c:/',['append Titel.wav',1,2]])
+    db.list_edit('ins', ['d:/test/',['insert Titel.wav',3,4]],1)
     #json_show(db._list.data)
     #print (db.get_init('lastPlay'))
     #print ( db.base_make(db.base_build_cdinfo()))
-    head = {'interpret': '1.test_header', 'album': '2.', 'genre': '3.Rock', \
-            'year': '4.2022', 'import': '__12.08.2022'}
-    #print(db.base_edit('import', 'D:/_Test_CD/Import', 'D:/_Test_CD/Audio' ))
-    #print(db.base_edit('head', 'D:/_Test_CD/Archiv3/new_add', head))#'Take_4.wav', 'Take 4.wav'))
+    head = {'interpret': 'Pink', 'album': 'Lady', 'genre': 'Pop', \
+            'year': '2019', 'import': '12.04.2020'}
+    #print(db.base_edit('del', 'D:/_Test_CD/Audio/CD34' ) )
+    print(db.base_edit('head', "D:/_Test_CD/Archiv2/CD537", head), '<base_edit(head)>\n')
+    print(db.base_edit('import', 'D:/_Test_CD/Import', 'D:/_Test_CD/Audio'), '<base_edit(import)>\n' )
     print('----------------------------------------------')
-    json_show(db._base.data)
+    #json_show(db._base.data)
     assert False, 'Stop'

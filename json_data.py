@@ -84,10 +84,10 @@ class JsonData():
 
 # =================== Modul Test =======================
 if __name__ == '__main__':
-    db = JsonData('load_main.txt')
+    db = JsonData('base_main.bas')
     #print(db.load('load_main.txt'))
     print(db.load())
-    db.save('save_test.txt')
+    db.save('save_test.bas')
     #print(db.data)
     json_show(db.data)
 

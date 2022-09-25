@@ -1,173 +1,13 @@
 {
     "head": {
         "name": "neuer Name xxxx",
-        "date": "26.08.2022 18:16",
-        "count": "145",
+        "date": "24.09.2022 10:22",
+        "count": "68",
         "freeNr": "4"
     },
     "data": [
         [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Blind.wav",
-                1,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Mr Jones.wav",
-                2,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Totally Nude.wav",
-                3,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Ruby Dear.wav",
-                4,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "(Nothing But) Flowers.wav",
-                5,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "The Democratic Circus.wav",
-                6,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "The Facts of Life.wav",
-                7,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Mommy Daddy You and I.wav",
-                8,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Big Daddy.wav",
-                9,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Bill.wav",
-                10,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD1",
-            [
-                "Cool Water.wav",
-                11,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Dirty Deeds Done Dirt Cheap.wav",
-                1,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Love At First Feel.wav",
-                2,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Big Balls.wav",
-                3,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Rocker.wav",
-                4,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Problem Child.wav",
-                5,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Theres Gonna Be Some Rockin.wav",
-                6,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Aint No Fun (Waiting Round To Be A Millionair.wav",
-                7,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Ride On.wav",
-                8,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Audio/CD2",
-            [
-                "Squealer.wav",
-                9,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "American Girl.wav",
                 1,
@@ -175,7 +15,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Anything Thats Rock & Roll.wav",
                 2,
@@ -183,7 +23,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Breakdown.wav",
                 3,
@@ -191,7 +31,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Dont Come Around Here No More.wav",
                 4,
@@ -199,7 +39,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Dont Do Me Like That.wav",
                 5,
@@ -207,7 +47,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Even The Losers.wav",
                 6,
@@ -215,7 +55,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Free Fallin.wav",
                 7,
@@ -223,7 +63,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Here Comes My Girl.wav",
                 8,
@@ -231,7 +71,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "I Need To Know.wav",
                 9,
@@ -239,7 +79,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "I Wont Back Down.wav",
                 10,
@@ -247,7 +87,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Into The Great Wide Open.wav",
                 11,
@@ -255,7 +95,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Learning To Fly.wav",
                 12,
@@ -263,7 +103,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Listen To Her Heart.wav",
                 13,
@@ -271,7 +111,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Mary Janes Last Dance.wav",
                 14,
@@ -279,7 +119,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Refugee.wav",
                 15,
@@ -287,7 +127,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Runnin Down A Dream.wav",
                 16,
@@ -295,7 +135,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "Something In The Air.wav",
                 17,
@@ -303,7 +143,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "The Waiting.wav",
                 18,
@@ -311,7 +151,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD33",
+            "D:/_Test_CD/Archiv0/CD33",
             [
                 "You Got Lucky.wav",
                 19,
@@ -319,7 +159,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Dirty Deeds Done Dirt Cheap.wav",
                 1,
@@ -327,7 +167,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Love At First Feel.wav",
                 2,
@@ -335,7 +175,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Big Balls.wav",
                 3,
@@ -343,7 +183,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Rocker.wav",
                 4,
@@ -351,7 +191,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Problem Child.wav",
                 5,
@@ -359,7 +199,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Theres Gonna Be Some Rockin.wav",
                 6,
@@ -367,7 +207,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Aint No Fun (Waiting Round To Be A Millionair.wav",
                 7,
@@ -375,7 +215,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Ride On.wav",
                 8,
@@ -383,7 +223,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD56",
+            "D:/_Test_CD/Archiv0/CD56",
             [
                 "Squealer.wav",
                 9,
@@ -391,95 +231,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Blind.wav",
-                1,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Mr Jones.wav",
-                2,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Totally Nude.wav",
-                3,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Ruby Dear.wav",
-                4,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "(Nothing But) Flowers.wav",
-                5,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "The Democratic Circus.wav",
-                6,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "The Facts of Life.wav",
-                7,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Mommy Daddy You and I.wav",
-                8,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Big Daddy.wav",
-                9,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Bill.wav",
-                10,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv1/CD103",
-            [
-                "Cool Water.wav",
-                11,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track01.wav",
                 1,
@@ -487,7 +239,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track02.wav",
                 2,
@@ -495,7 +247,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track03.wav",
                 3,
@@ -503,7 +255,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track04.wav",
                 4,
@@ -511,7 +263,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track05.wav",
                 5,
@@ -519,7 +271,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track06.wav",
                 6,
@@ -527,7 +279,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track07.wav",
                 7,
@@ -535,7 +287,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track08.wav",
                 8,
@@ -543,7 +295,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track09.wav",
                 9,
@@ -551,7 +303,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track10.wav",
                 10,
@@ -559,7 +311,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track11.wav",
                 11,
@@ -567,7 +319,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track12.wav",
                 12,
@@ -575,7 +327,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track13.wav",
                 13,
@@ -583,7 +335,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track14.wav",
                 14,
@@ -591,7 +343,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track15.wav",
                 15,
@@ -599,7 +351,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track16.wav",
                 16,
@@ -607,7 +359,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track17.wav",
                 17,
@@ -615,7 +367,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track18.wav",
                 18,
@@ -623,7 +375,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD130",
+            "D:/_Test_CD/Archiv0/CD130",
             [
                 "Track19.wav",
                 19,
@@ -631,191 +383,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Bark At The Moon.wav",
-                1,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Forever.wav",
-                2,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Now You See It (Now You Dont).wav",
-                3,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Rock n Roll Rebel.wav",
-                4,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "So Tired.wav",
-                5,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Spiders.wav",
-                6,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Waiting For Darkness.wav",
-                7,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD205",
-            [
-                "Youre No Different.wav",
-                8,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "Careful With The Axe [Deep Freeze Mice].wav",
-                1,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "City Of People [The Creeps].wav",
-                2,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "Dont Need Your Loving [Choclate Watch Band].wav",
-                3,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "French Blues [Black Hollies].wav",
-                4,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "Greenfuz [Randy Alveny and Green Fuz].wav",
-                5,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "Greenfuz [The Cramps].wav",
-                6,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "How Do You Know [Lyres].wav",
-                7,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "How Do You Know2 [Lyres].wav",
-                8,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "Im A Man [Yard Trauma].wav",
-                9,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "On The Run [The Cynics].wav",
-                10,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "On Thousand Lies [Yard Trauma].wav",
-                11,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "She Cracked2 [Modern Lovers] .wav",
-                12,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "There Will Be No Next Time [The Kits].wav",
-                13,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "Theres She Goes Again [The Velevet Underground].wav",
-                14,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/Archiv2_1/CD414",
-            [
-                "What I Like About You [Romantics].wav",
-                15,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T01.wav",
                 1,
@@ -823,7 +391,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T02.wav",
                 2,
@@ -831,7 +399,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T03.wav",
                 3,
@@ -839,7 +407,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T04.wav",
                 4,
@@ -847,7 +415,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T05.wav",
                 5,
@@ -855,7 +423,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T06.wav",
                 6,
@@ -863,7 +431,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T07.wav",
                 7,
@@ -871,7 +439,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T08.wav",
                 8,
@@ -879,7 +447,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T09.wav",
                 9,
@@ -887,7 +455,7 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv2/CD537",
+            "D:/_Test_CD/Archiv0/CD537",
             [
                 "Life Expectancy D01T10.wav",
                 10,
@@ -895,274 +463,90 @@
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 1.wav",
+                "Blind.wav",
                 1,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 2.wav",
+                "Mr Jones.wav",
                 2,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 3.wav",
+                "Totally Nude.wav",
                 3,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 4.wav",
+                "Ruby Dear.wav",
                 4,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 5.wav",
+                "(Nothing But) Flowers.wav",
                 5,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 6.wav",
+                "The Democratic Circus.wav",
                 6,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 7.wav",
+                "The Facts of Life.wav",
                 7,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 8.wav",
+                "Mommy Daddy You and I.wav",
                 8,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 9.wav",
+                "Big Daddy.wav",
                 9,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 10.wav",
+                "Bill.wav",
                 10,
                 0
             ]
         ],
         [
-            "D:/_Test_CD/Archiv3/CD990",
+            "D:/_Test_CD/Archiv0/CD103",
             [
-                "Take 11.wav",
+                "Cool Water.wav",
                 11,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 12.wav",
-                12,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 13.wav",
-                13,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 14.wav",
-                14,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 15.wav",
-                15,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 16.wav",
-                16,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 17.wav",
-                17,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 18.wav",
-                18,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 19.wav",
-                19,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 20.wav",
-                20,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 21.wav",
-                21,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 22.wav",
-                22,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 23.wav",
-                23,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 24.wav",
-                24,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 25.wav",
-                25,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 26.wav",
-                26,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 27.wav",
-                27,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 28.wav",
-                28,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 29.wav",
-                29,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/CD990",
-            [
-                "Take 30.wav",
-                30,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/new_add",
-            [
-                "Take 1.wav",
-                1,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/new_add",
-            [
-                "Take 3.wav",
-                2,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/new_add",
-            [
-                "Take 4.wav",
-                3,
-                0
-            ]
-        ],
-        [
-            "D:/_Test_CD/Archiv3/new_add",
-            [
-                "Take 5.wav",
-                4,
                 0
             ]
         ]

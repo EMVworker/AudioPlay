@@ -4,15 +4,15 @@ Created on Sun Jul 17 12:07:58 2022
 
 @author: juergen
 """
+import sys
+sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
 import time
 import os
 import copy
 import logging
 import shutil
-#from enum import Enum
 from json_data import JsonData
 from json_data import json_show
-
 
 class SongList():
     """ json-format for data creation
@@ -42,22 +42,26 @@ class SongList():
 
 
     def _titel_list(self, cd_, name=None):
-        """select titel & titel-paramter from base-list
-        cd_:     cd_-Name
-        name:   None = Titel-Liste, xxx: result[0]=position result[1]=calls
+        """select titel & titel-paramter from base-list:\n
+        cd_:    cd_-Name\n
+        name:   None = Titel-Liste\n
+        result: [titel_path, Titel, position, calls]\n
         """
         val=[]
-        for titel in self._base.data['data'][cd_]['tracks']:
-            val.append(titel[0])
-        if name is not None:
+        if name is None:
+            path = self._base.data['data'][cd_]['path']
+            for titel in self._base.data['data'][cd_]['tracks']:
+                val.append([path + '/' + titel[0], titel[0], titel[1], titel[2]])
+        else:
             try:
+                for track in self._base.data['data'][cd_]['tracks']:
+                    val.append(track[0])
                 index = val.index(name)
                 val = self._base.data['data'][cd_]['tracks'][index]
             except ValueError:
                 val = ['[ERROR]: unknow track "' + name + '"', 0, 0]
-                self.error('_titel_list', '[ERROR]: track:"' + name +\
+                self.error('_titel_list', '[ERROR]: track:"' + name +
                            '" not in CD:"' + cd_ +'"', False)
-                #print('>>> _titel:', val, cd_)
         return val
 
 
@@ -169,9 +173,14 @@ class SongList():
 
 
     def get_init(self, typ):
-        """ read settings(cd-path,bin,...) from ini-file
-        typ:    cd=path for dcs, bin=execute-files, list=player-list
-                searchTyp=search-key, searchVal=search-value, lastPlay= last wave
+        """ read settings(cd-path,bin,...) from ini-file:\n
+        typ:\n
+        - cd        = path for dcs\n
+        - bin       = execute-files\n
+        - list      = player-list\n
+        - searchTyp = search-key\n
+        - searchVal = search-value
+        - lastPlay  = last wave
         return: value
         """
         val = None
@@ -565,9 +574,9 @@ class SongList():
 
 
     def base_build_cdinfo(self, save=True):
-        """ build / check the "CDInfo.txt" for all cds in init.path
-        save_info:  save CDInfo.txt in cd path
-        result:     (list of all available cds (cd_dir), True / Errors)
+        """ build / check the "CDInfo.txt" for all cds in init.path:\n
+        - save:  save CDInfo.txt in cd path\n
+        result:     (list of all available cds (cd_dir), True / Errors)\n
         """
         cd_dir = []
          #--- scan cd-paths ----
@@ -611,9 +620,9 @@ class SongList():
 
 
     def base_make(self, save=True, sort = False):
-        """ make a new "base_main.bas" list for all avaiable cds with "CDInfo.txt"
-        save:  save the new "base_main.bas"
-        sort:  True = sort after interpret, sort after CD-Name
+        """ make a new "base_main.bas" list for all avaiable cds with "CDInfo.txt":\n
+        - save:  save the new "base_main.bas"\n
+        - sort:  True = sort after interpret, sort after CD-Name\n
         result: True = done, Other = ERROR-message
         """
         state = True
@@ -679,38 +688,36 @@ class SongList():
 
 
     #def base_edit(self, typ, name, val, par=None, save = True):
-    def base_edit(self, *par, save = True):
-        """ edit par[0](add,del,head,track) in the base-list
-        par[0]:add:   par[1] = cd-path with image/track-files, par[2] = header(album...)
-               del:   par[1] = cd-path with image/track-files
-               head:  par[1] = cd-path, par[2] = new header
-               track: par[1] = cd-path, par[2] = old file-name, par[3] = new filename or del("")
-               import:par[1] = import-path, par[2] = target-path
-        par[1]: edit-name
-        par[2]: value for add or file-name
-        par[3]: xxx = new-name for file, "" = delet file
-        save:   save base_main.bas
-        result: True = done, Other = ERROR-message
+    def base_edit(self, typ, *par, save = True):
+        """ edit par[0](add,del,head,track) in the base-list\n
+        - typ:\n
+            - add:   par[0] = cd-path with image/track-files, par[2] = header(album...)\n
+            - del:   par[0] = cd-path with image/track-files\n
+            - head:  par[0] = cd-path, par[1] = new header\n
+            - track: par[0] = cd-path, par[1] = old file-name, par[2] = new filename or del("")\n
+            - import:par[0] = import-path, par[1] = target-path\n
+        - save:   save base_main.bas\n
+        result: True = done, Other = ERROR-message\n
         """
         state = None
         #----- add new cds with data -----
-        if par[0] == 'add':
-            state = self._base_add_cd(par[1], par[2])
+        if typ == 'add':
+            state = self._base_add_cd(par[0], par[1])
         #----- delete exist cds and his data -----
-        if par[0] == 'del':
-            state = self._base_del_cd(par[1])
+        if typ == 'del':
+            state = self._base_del_cd(par[0])
         #----- edit head of cd -----
-        if par[0] == 'head':
-            state = self._base_rename_head(par[1], par[2])
+        if typ == 'head':
+            state = self._base_rename_head(par[0], par[1])
             if state is True:
-                state = self._base_info_update(par[1])
+                state = self._base_info_update(par[0])
         #----- rename / remove track -----
-        if par[0] == 'track':
-            state = self._base_rename_track(par[1], par[2], par[3])
+        if typ == 'track':
+            state = self._base_rename_track(par[0], par[1], par[2])
             if state is True:
-                state = self._base_info_update(par[1])
-        if par[0] == 'import':
-            state = self._base_import_cd(par[1], par[2])
+                state = self._base_info_update(par[0])
+        if typ == 'import':
+            state = self._base_import_cd(par[0], par[1])
         #--- save base-list ---
         if save is True:
             self._base.save()
@@ -721,78 +728,86 @@ class SongList():
 
     #**************************************************************************
     #************************** list-methoden *********************************
-    def list_get(self, numb, typ):
-        """ get info from play-list-entry
-        numb: Number of list entry, None = list of all available items
-        typ:  Info-Typ: play = full path for Audio-Player
-                        name = naming of the cd [interpret, album, titel, track-nr]
-                        info = advanced infos [calls, genre, year, import(date)]
-                        all  = naming & advanced infos
+    def list_select(self, typ, par=True, num=None):
+        """ select from current list\n
+        - typ:\n
+            - cd:    cd-infos from list (par: True=all, False=reduct)\n
+                 return:(cd_path, Interpret, Album, genre, year, import)\n
+            - titel: titel from cd/list.(par: cd_name, ""=all titel)\n
+                 return: (titel_path, titel_name, track_nr, call_count)\n
+            - sort:  intern use for sort-function\n
+                 return:(interpret,album,genre,year,import,titel_nr)\n
+        - par: <typ=cd> true=full, false =reduct <typ:titel> cd_name or all("")\n
+        - num: select titel/CD-position\n
+        return: depentend from function
         """
         item = []
+        self.last_cdpath = ''
         def basic_data(numb):
             path = self._list.data['data'][numb][0]
             cd_ = str(path).split('/')[-1]
             track = self._list.data['data'][numb][1][0]
             return path, cd_, track
-        def group_name(item):
-            item.append(self._base.data['data'][cd_]['interpret'])
-            item.append(self._base.data['data'][cd_]['album'])
-            #print('>>> list_get:',cd_,track,'\n')
-            item.append(track)
-            item.append(self._titel_list(cd_, track)[1])
+        def typ_cd(item):
+            interpret = self._base.data['data'][cd_]['interpret']
+            album = self._base.data['data'][cd_]['album']
+            genre = self._base.data['data'][cd_]['genre']
+            year = self._base.data['data'][cd_]['year']
+            imp_ = self._base.data['data'][cd_]['import']
+            if par is not False:
+                if self.last_cdpath != cd_:
+                    item.append([cd_, interpret, album, genre, year, imp_])
+                    self.last_cdpath = cd_
+            else:
+                item.append([path, interpret, album, genre, year, imp_])
             return item
-        def group_info(item):
-            item.append(self._titel_list(cd_, track)[2])
-            item.append(self._base.data['data'][cd_]['genre'])
-            item.append(self._base.data['data'][cd_]['year'])
-            item.append(self._base.data['data'][cd_]['import'])
+        def typ_titel(item):
+            titel_path = path + '/' + track
+            info = self._titel_list(cd_, track)
+            item.append([titel_path, track, info[1], info[2]])
             return item
-        def group_all(item):
-            group_name(item)
-            group_info(item)
+        def typ_sort(item):
+            interpret = self._base.data['data'][cd_]['interpret']
+            album = self._base.data['data'][cd_]['album']
+            genre = self._base.data['data'][cd_]['genre']
+            year = self._base.data['data'][cd_]['year']
+            imp_ = self._base.data['data'][cd_]['import']
+            pos = self._titel_list(cd_, track)[1]
+            item.append([interpret, album, genre, year, imp_, pos, cd_])
             return item
-        if numb is None:
-            #--- list with all items of list ---
-            val = []
-            for i, j in enumerate(self._list.data['data']):
-                item = []
-                path, cd_, track = basic_data(i)
-                if  typ == 'name':
-                    group_name(item)
-                if  typ == 'info':
-                    group_info(item)
-                if  typ == 'all':
-                    group_all(item)
-                if typ == 'play':
-                    item = path + '/' + track
-                val.append(item)
-                #del(j)
-        else:
-             #--- with one items of list ---
-            path, cd_, track = basic_data(numb)
-            if typ == 'name':
-                val = group_name(item)
-            if typ == 'info':
-                val = group_info(item)
-            if typ == 'all':
-                val = group_all(item)
-            if typ == 'play':
-                val = path + '/' + track
+        #--- list with all items of list ---
+        val = []
+        for i, j in enumerate(self._list.data['data']):
+            item = []
+            path, cd_, track = basic_data(i)
+            if  typ == 'cd':
+                typ_cd(item)
+            if  typ == 'titel':
+                if par == '':
+                    typ_titel(item)
+            if  typ == 'sort':
+                typ_sort(item)
+            if len(item) > 0:
+                val = val + item
+        if typ == 'titel':
+            if par != '':
+                val = self._titel_list(par)
+        if num is not None:
+            val = val[num]
         return val
 
-
     def list_edit(self, mode, par1=None, par2=None):
-        """ edit(clear,add...) the list-format: [ path,[pos,calls] ]
-        mode:   add  = added track to list (par1 = [ path,[pos,calls] ])
-                cd   = added all tracks from cd (par1 = path)
-                del  = remove track from list (par1 = list-nr)
-                clear= remove all tracks (no par.)
-                ins  = insert track before nr (par1 = [ path,[pos,calls], par2 = nr )
-                head = update date & count & name (par1 = name of list)
-        par1:   add,cd = cd-name, del=list-nr
-        par2:   list-position
-        return: True or Errors
+        """ edit(clear,add...) the list-format: [ path,[pos,calls] ]:\n
+        - mode:\n
+            - add  = added track to list (par1 = [ path,[pos,calls] ])\n
+            - cd   = added all tracks from cd (par1 = path)\n
+            - del  = remove track from list (par1 = list-nr)\n
+            - clear= remove all tracks (no par.)\n
+            - ins  = insert track before nr (par1 = [ path,[pos,calls], par2 = nr )\n
+            - head = update date & count & name (par1 = new list-name)\n
+        - par1:   add,cd = cd-name, del=list-nr\n
+        - par2:   list-position\n
+        return: True or Errors\n
         """
         state = True
         if mode =='clear':
@@ -819,12 +834,10 @@ class SongList():
             self._list.data['head']['count'] = str(len(self._list.data['data']))
         return state
 
-
     def list_sort(self, typ, z_a=False):
-        """ sort(interpreter,album...) the play-list
-        typ:    sort-function = interpret, album, genre, year, import, rand(random)
-        value:  Keyword
-        z_a:    sort-direction
+        """ sort(interpreter,album...) the play-list:\n
+        - typ:    sortfunction = -interpret, -album, -genre, -year, -import, -rand(random)\n
+        - z_a:    sort-direction
         return: True or Errors
         """
         state = True
@@ -832,31 +845,30 @@ class SongList():
         key = None
         #--- Selection of the sorting expression pos=3
         if typ == 'interpret':
-            key={'interpret':0, 'album':1, 'genre':5, 'year':6, 'import':7}
+            key={'interpret':0,'album':1,'genre':2,'year':3,'import':4}
         if typ == 'album':
-            key={'album':1, 'interpret':0, 'genre':5, 'year':6, 'import':7}
+            key={'album':1,'interpret':0,'genre':2,'year':3,'import':4}
         if typ == 'genre':
-            key={'genre':5, 'interpret':0, 'album':1, 'year':6, 'import':7}
+            key={'genre':2,'interpret':0,'album':1,'year':3,'import':4}
         if typ == 'year':
-            key={'year':6, 'interpret':0, 'album':1, 'genre':5, 'import':7}
+            key={'year':3,'interpret':0,'album':1,'genre':2,'import':4}
         if typ == 'import':
-            key={'import':7, 'interpret':0, 'album':1, 'genre':5, 'year':6}
+            key={'import':4,'interpret':0,'album':1,'genre':2,'year':3}
         if typ == 'rand':
             key = True
         if key is None:
             self.error('list_sort', '[error] wrong parameter: ' + typ)
         if key != 'rand':
             #--- sortieren als interpret, album, genre, year, import ---
-            for i in range(0, len(self._list.data['data'])):
+            sort_info = self.list_select('sort', '')
+            for i in range(0, len(sort_info)):
                 #--- built sort_key ---
-                info = self.list_get(i,'all')
                 sort = ''
                 for j in key:
-                    sort = sort + str(info[key[j]]) + ':'
-                sort_key = [sort, int(info[3])]
+                    sort = sort + str(sort_info[i][key[j]]) + ':'
+                sort_key = [sort, int(sort_info[i][5])]
                 #--- add sort_key + data ---
                 sort_list.append([sort_key, self._list.data['data'][i]])
-                #print('>>> sort=', sort_list , '\n')
             #--- sort-list save as playlist
             sort_list.sort(reverse = z_a) #- Liste sortieren
         else:
@@ -867,13 +879,13 @@ class SongList():
             self._list.data['data'][i] = val[1]
         return state
 
-
     def list_filter(self, typ, value, clear=True):
-        """ search(interpret,album...) in base-list after parameter and gerate
-            the search-list
-        typ:    search-function = interpret, album, genre, year, import
-        value:  Keyword
-        clear:  Clear current list
+        """ search(interpret,album...) in base-list after parameter and gerate\
+            the search-list\n
+        - typ:    searchfunction -interpret, -album, -genre, -year, -import\n
+        - value:  Keyword\n
+        - clear:  Clear current list\n
+        return: state True or Errors
         """
         def _base_search_cd(key, search, new=True):
             """ search in bas-list
@@ -913,23 +925,26 @@ if __name__ == '__main__':
     #json_show(db._base.data)
     # print(db._init.data)
     # print(db._info.data)
-    print ( db.base_make() ,'<base_make>\n')
+    print ( db.base_make(sort=True) ,'<base_make>\n')
     #json_show(db._base.data)
     print (db.list_filter('album', ''),'<list_filter>\n')
     db.save('list')
     db.load('list')
-    print( db.list_sort('interpret', False),'<list_sort>\n')
+    print( db.list_sort('import', True),'<list_sort>\n')
     #json_show(db._list.data)
-    # for lst in db.list_get(None, 'all'):
-    #     print(lst)
+    for lst in db.list_select('cd'):
+          print(lst)
+    cd_name = ''
+    for lst in db.list_select('titel', cd_name, None):
+        print(lst)
     #----------- list_edit ---------------
     db.list_edit('clear')
-    db.list_edit('cd', 'CD414')
-    db.list_edit('del', 1)
+    db.list_edit('cd', 'CD33')
+    db.list_edit('del', 0)
     db.list_edit('add', ['c:/',['append Titel.wav',1,2]])
-    db.list_edit('ins', ['d:/test/',['insert Titel.wav',3,4]],1)
+    db.list_edit('ins', ['d:/test/',['insert Titel.wav',3,4]],4)
     #json_show(db._list.data)
-    #print (db.get_init('lastPlay'))
+    print (db.get_init('lastPlay'))
     #print ( db.base_make(db.base_build_cdinfo()))
     head = {'interpret': 'Pink', 'album': 'Lady', 'genre': 'Pop', \
             'year': '2019', 'import': '12.04.2020'}

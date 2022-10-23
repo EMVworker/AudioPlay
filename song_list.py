@@ -737,6 +737,9 @@ class SongList():
                  return: (titel_path, titel_name, track_nr, call_count)\n
             - sort:  intern use for sort-function\n
                  return:(interpret,album,genre,year,import,titel_nr)\n
+            - track:  all info from one titel (par: path_titel)\n
+            - path:   path+cd_name from cd (par: cd_name)
+                return:(cd_path, CD, Interpret, Album, genre, year, import, [track, pos,call])\n
         - par: <typ=cd> true=full, false =reduct <typ:titel> cd_name or all("")\n
         - num: select titel/CD-position\n
         return: depentend from function
@@ -775,25 +778,44 @@ class SongList():
             pos = self._titel_list(cd_, track)[1]
             item.append([interpret, album, genre, year, imp_, pos, cd_])
             return item
-        #--- list with all items of list ---
+        #--- list select item ---
         val = []
-        for i, j in enumerate(self._list.data['data']):
-            item = []
-            path, cd_, track = basic_data(i)
-            if  typ == 'cd':
-                typ_cd(item)
-            if  typ == 'titel':
-                if par == '':
-                    typ_titel(item)
-            if  typ == 'sort':
-                typ_sort(item)
-            if len(item) > 0:
-                val = val + item
-        if typ == 'titel':
-            if par != '':
-                val = self._titel_list(par)
-        if num is not None:
-            val = val[num]
+        if typ == 'track':
+            item=[]
+            if num is None:
+                path = par.replace(par.split('/')[-1], '')
+                cd_ = par.split('/')[-2]
+                track = par.split('/')[-1]
+                print('>>> list_select:', path, cd_, track)
+                interpret = self._base.data['data'][cd_]['interpret']
+                album = self._base.data['data'][cd_]['album']
+                genre = self._base.data['data'][cd_]['genre']
+                year = self._base.data['data'][cd_]['year']
+                imp_ = self._base.data['data'][cd_]['import']
+                titel = self._titel_list(cd_, track)
+                val = [path, cd_, interpret, album, genre, year, imp_, titel]
+        if typ == 'path':
+            val = self._base.data['data'][par]['path']
+        else:
+            #--- list with all items of list ---
+            for i, j in enumerate(self._list.data['data']):
+                item = []
+                path, cd_, track = basic_data(i)
+                if  typ == 'cd':
+                    typ_cd(item)
+                if  typ == 'titel':
+                    if par == '':
+                        typ_titel(item)
+                if  typ == 'sort':
+                    typ_sort(item)
+                if len(item) > 0:
+                    val = val + item
+            if typ == 'titel':
+                if par != '':
+                    val = self._titel_list(par)
+            #--- list with select item
+            if num is not None:
+                val = val[num]
         return val
 
     def list_edit(self, mode, par1=None, par2=None):
@@ -937,6 +959,8 @@ if __name__ == '__main__':
     cd_name = ''
     for lst in db.list_select('titel', cd_name, None):
         print(lst)
+    print(db.list_select('track', 'D:/_Test_CD/Archiv0/CD103/Mr Jones.wav'), '<list_select(index)>\n')
+    print(db.list_select('path', 'CD103'), '<list_select(index)>\n')
     #----------- list_edit ---------------
     db.list_edit('clear')
     db.list_edit('cd', 'CD33')
@@ -953,4 +977,4 @@ if __name__ == '__main__':
     print(db.base_edit('import', 'D:/_Test_CD/Import', 'D:/_Test_CD/Audio'), '<base_edit(import)>\n' )
     print('----------------------------------------------')
     #json_show(db._base.data)
-    assert False, 'Stop'
+    #assert False, 'Stop'

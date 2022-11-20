@@ -735,10 +735,12 @@ class SongList():
                  return:(cd_path, Interpret, Album, genre, year, import)\n
             - titel: titel from cd/list.(par: cd_name, ""=all titel)\n
                  return: (titel_path, titel_name, track_nr, call_count)\n
+            - image: pad + images from cd(par: cd_name)\n
+                 return: ([image-list])
             - sort:  intern use for sort-function\n
                  return:(interpret,album,genre,year,import,titel_nr)\n
             - track:  all info from one titel (par: path_titel)\n
-            - path:   path+cd_name from cd (par: cd_name)
+            - path:   path+cd_name from cd (par: cd_name)\n
                 return:(cd_path, CD, Interpret, Album, genre, year, import, [track, pos,call])\n
         - par: <typ=cd> true=full, false =reduct <typ:titel> cd_name or all("")\n
         - num: select titel/CD-position\n
@@ -794,28 +796,36 @@ class SongList():
                 imp_ = self._base.data['data'][cd_]['import']
                 titel = self._titel_list(cd_, track)
                 val = [path, cd_, interpret, album, genre, year, imp_, titel]
-        if typ == 'path':
-            val = self._base.data['data'][par]['path']
         else:
-            #--- list with all items of list ---
-            for i, j in enumerate(self._list.data['data']):
-                item = []
-                path, cd_, track = basic_data(i)
-                if  typ == 'cd':
-                    typ_cd(item)
-                if  typ == 'titel':
-                    if par == '':
-                        typ_titel(item)
-                if  typ == 'sort':
-                    typ_sort(item)
-                if len(item) > 0:
-                    val = val + item
-            if typ == 'titel':
-                if par != '':
-                    val = self._titel_list(par)
-            #--- list with select item
-            if num is not None:
-                val = val[num]
+            if typ == 'path':
+                val = self._base.data['data'][par]['path']
+            else:
+                if typ == 'image':
+                    image = self._base.data['data'][par]['image']
+                    path = self._base.data['data'][par]['path']
+                    val = []
+                    for i in image:
+                        val.append(path + '/' + i)
+                else:
+                    #--- list with all items of list ---
+                    for i, j in enumerate(self._list.data['data']):
+                        item = []
+                        path, cd_, track = basic_data(i)
+                        if  typ == 'cd':
+                            typ_cd(item)
+                        if  typ == 'titel':
+                            if par == '':
+                                typ_titel(item)
+                        if  typ == 'sort':
+                            typ_sort(item)
+                        if len(item) > 0:
+                            val = val + item
+                    if typ == 'titel':
+                        if par != '':
+                            val = self._titel_list(par)
+                    #--- list with select item
+                    if num is not None:
+                        val = val[num]
         return val
 
     def list_edit(self, mode, par1=None, par2=None):
@@ -959,8 +969,9 @@ if __name__ == '__main__':
     cd_name = ''
     for lst in db.list_select('titel', cd_name, None):
         print(lst)
-    print(db.list_select('track', 'D:/_Test_CD/Archiv0/CD103/Mr Jones.wav'), '<list_select(index)>\n')
-    print(db.list_select('path', 'CD103'), '<list_select(index)>\n')
+    print(db.list_select('track', 'D:/_Test_CD/Archiv0/CD103/Mr Jones.wav'), '<list_select(track)>\n')
+    print(db.list_select('path', 'CD103'), '<list_select(path)>\n')
+    print(db.list_select('image', 'CD33'), '<list_select(image)>\n')
     #----------- list_edit ---------------
     db.list_edit('clear')
     db.list_edit('cd', 'CD33')

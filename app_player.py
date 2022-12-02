@@ -9,12 +9,12 @@ sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
 #from ctrl_player import DirectPlay
 #from ctrl_player import ListData
 from ctrl_player import HmiPlay
-import ctrl_player
+#import ctrl_player
 import os
 sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
 from gui_player import Ui_MainWindow
 from form_image import Ui_FormImage
-from diag_keyboard import Ui_DialogKeyboard
+from diag_keyboard_V0 import Ui_Keyboard
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap
@@ -25,7 +25,7 @@ class DlgKeyboard(QDialog):
     def __init__(self, parent=None):
         # super(DlgKeyboard, self).__init__(parent)
         super().__init__(parent)
-        self.ui = Ui_DialogKeyboard() # Create an instance of the GUI
+        self.ui = Ui_Keyboard() # Create an instance of the GUI
         self.ui.setupUi(self) # Run the .setupUi() method to show the GUI
         #--- Connect Widgets ---
         self.ui.pushButton_3.clicked.connect(self.form_close)
@@ -240,11 +240,11 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
 
     def pb_search(self):
         """ search CD / Titel """
-        # dlg = DlgKeyboard()
-        # dlg.exec()
-        self.hmi.list_build(['interpret', '', 'interpret', False])
-        self.hmi.list_save('search')
-        self.hmi.list_autoplay(False)
+        dlg = DlgKeyboard()
+        dlg.exec()
+        # self.hmi.list_build(['interpret', '', 'interpret', False])
+        # self.hmi.list_save('search')
+        # self.hmi.list_autoplay(False)
 
     def pb_image(self):
         """ start image-viewer """

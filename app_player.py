@@ -12,8 +12,8 @@ from ctrl_player import HmiPlay
 #import ctrl_player
 import os
 sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
-from gui_player import Ui_MainWindow
-from form_image import Ui_FormImage
+from gui_player_V0 import Ui_MainWindow
+from form_image_V1 import Ui_DialogImage
 from diag_keyboard_V0 import Ui_Keyboard
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
@@ -22,13 +22,63 @@ from PyQt5.QtGui import QPixmap
 
 class DlgKeyboard(QDialog):
     """ Dialog Keyboard """
-    def __init__(self, parent=None):
+    def __init__(self, text='', parent=None):
         # super(DlgKeyboard, self).__init__(parent)
         super().__init__(parent)
         self.ui = Ui_Keyboard() # Create an instance of the GUI
         self.ui.setupUi(self) # Run the .setupUi() method to show the GUI
+        #--- Variable ---
+        self.key_flag = 1
+        self.charc = {'small':['a','b','c','d','e','f','g','h','i','j','k','l','m',\
+                   'n','o','p','q','r','s','t','u','v','w','x','y','z','ä','ö','ü'],
+                 'big':['A','B','C','D','E','F','G','H','I','J','K','L','M',\
+                   'N','O','P','Q','R','S','T','U','V','W','X','Y','Z','Ä','Ö','Ü'],
+                 'num':['1','2','3','4','5','6','7','8','9','0','ß','!','"',\
+                   '§','$','%','/','(',')','=','?','+','-','*','/','_','#','.',',']
+                 }
         #--- Connect Widgets ---
-        self.ui.pushButton_3.clicked.connect(self.form_close)
+        self.ui.leIn_text.setText(text)
+        self.ui.pbKey_cr.clicked.connect(self.form_close)
+        self.ui.pbKey_num.clicked.connect(lambda:self.change_chr('keys'))
+        self.ui.pbKey_clear.clicked.connect(lambda:self.ui.leIn_text.setText(''))
+        self.ui.pbKey_del.clicked.connect(self.clear_chr)
+        self.ui.pbKey_a.clicked.connect(lambda:self.add_chr(self.key_list[0]))
+        self.ui.pbKey_b.clicked.connect(lambda:self.add_chr(self.key_list[1]))
+        self.ui.pbKey_c.clicked.connect(lambda:self.add_chr(self.key_list[2]))
+        self.ui.pbKey_d.clicked.connect(lambda:self.add_chr(self.key_list[3]))
+        self.ui.pbKey_e.clicked.connect(lambda:self.add_chr(self.key_list[4]))
+        self.ui.pbKey_f.clicked.connect(lambda:self.add_chr(self.key_list[5]))
+        self.ui.pbKey_g.clicked.connect(lambda:self.add_chr(self.key_list[6]))
+        self.ui.pbKey_h.clicked.connect(lambda:self.add_chr(self.key_list[7]))
+        self.ui.pbKey_i.clicked.connect(lambda:self.add_chr(self.key_list[8]))
+        self.ui.pbKey_j.clicked.connect(lambda:self.add_chr(self.key_list[9]))
+        self.ui.pbKey_k.clicked.connect(lambda:self.add_chr(self.key_list[10]))
+        self.ui.pbKey_l.clicked.connect(lambda:self.add_chr(self.key_list[11]))
+        self.ui.pbKey_m.clicked.connect(lambda:self.add_chr(self.key_list[12]))
+        self.ui.pbKey_n.clicked.connect(lambda:self.add_chr(self.key_list[13]))
+        self.ui.pbKey_o.clicked.connect(lambda:self.add_chr(self.key_list[14]))
+        self.ui.pbKey_p.clicked.connect(lambda:self.add_chr(self.key_list[15]))
+        self.ui.pbKey_q.clicked.connect(lambda:self.add_chr(self.key_list[16]))
+        self.ui.pbKey_r.clicked.connect(lambda:self.add_chr(self.key_list[17]))
+        self.ui.pbKey_s.clicked.connect(lambda:self.add_chr(self.key_list[18]))
+        self.ui.pbKey_t.clicked.connect(lambda:self.add_chr(self.key_list[19]))
+        self.ui.pbKey_u.clicked.connect(lambda:self.add_chr(self.key_list[20]))
+        self.ui.pbKey_v.clicked.connect(lambda:self.add_chr(self.key_list[21]))
+        self.ui.pbKey_w.clicked.connect(lambda:self.add_chr(self.key_list[22]))
+        self.ui.pbKey_x.clicked.connect(lambda:self.add_chr(self.key_list[23]))
+        self.ui.pbKey_y.clicked.connect(lambda:self.add_chr(self.key_list[24]))
+        self.ui.pbKey_z.clicked.connect(lambda:self.add_chr(self.key_list[25]))
+        self.ui.pbKey_ae.clicked.connect(lambda:self.add_chr(self.key_list[26]))
+        self.ui.pbKey_oe.clicked.connect(lambda:self.add_chr(self.key_list[27]))
+        self.ui.pbKey_ue.clicked.connect(lambda:self.add_chr(self.key_list[28]))
+        self.ui.pbKey_sp.clicked.connect(lambda:self.add_chr(None, ' '))
+        #--- List-Objekt ---
+        self.key_list = [
+            self.ui.pbKey_a, self.ui.pbKey_b, self.ui.pbKey_c, self.ui.pbKey_d, self.ui.pbKey_e, self.ui.pbKey_f,
+            self.ui.pbKey_g, self.ui.pbKey_h, self.ui.pbKey_i, self.ui.pbKey_j, self.ui.pbKey_k, self.ui.pbKey_l,
+            self.ui.pbKey_m, self.ui.pbKey_n, self.ui.pbKey_o, self.ui.pbKey_p, self.ui.pbKey_q, self.ui.pbKey_r,
+            self.ui.pbKey_s, self.ui.pbKey_t, self.ui.pbKey_u, self.ui.pbKey_v, self.ui.pbKey_w, self.ui.pbKey_x,
+            self.ui.pbKey_y, self.ui.pbKey_z, self.ui.pbKey_ae, self.ui.pbKey_oe, self.ui.pbKey_ue]
 
     def closeEvent(self, event):
         """ Close-Event """
@@ -39,9 +89,45 @@ class DlgKeyboard(QDialog):
         """ Close-Methode """
         self.close()
 
+    def change_chr(self, mode):
+        """ change characters of keyboard\n
+        mode: change characters betwen text-small, text-big, num/symbol
+        """
+        if self.key_flag <= 0:
+            self.key_flag = 1
+            mode = 'small'
+        else:
+            if self.key_flag == 1:
+                self.key_flag = 2
+                mode = 'big'
+            else:
+                if self.key_flag >= 2:
+                    self.key_flag = 0
+                    mode = 'num'
+        for i,key in enumerate(self.key_list):
+            key.setText(self.charc[mode][i])
+
+    def clear_chr(self):
+        """ delete character from input-text """
+        text = self.ui.leIn_text.text()
+        text = text[0:len(text)-1]
+        self.ui.leIn_text.setText(text)
+
+    def add_chr(self, key, charac=''):
+        """ add clicked charactaer to input_text 
+        key:    current clicked button-text
+        charac: set character (key=None)
+        """
+        text =  self.ui.leIn_text.text()
+        if key is not None:
+            text = text + key.text()
+        else:
+            text = text + charac
+        self.ui.leIn_text.setText(text)
 
 
-class FormImage(QMainWindow):
+
+class DialogImage(QDialog):
     """ cover/bookled-viewer """
     def __init__(self, image, parent=None):
         """ Image Viewer
@@ -49,7 +135,7 @@ class FormImage(QMainWindow):
         """
         #super(FormImage, self).__init__(parent)
         super().__init__(parent)
-        self.ui = Ui_FormImage() # Create an instance of the GUI
+        self.ui = Ui_DialogImage() # Create an instance of the GUI
         self.ui.setupUi(self) # Run the .setupUi() method to show the GUI
         #--- Connect Widgets ---
         self.zoom = 0
@@ -240,17 +326,17 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
 
     def pb_search(self):
         """ search CD / Titel """
-        dlg = DlgKeyboard()
+        dlg = DlgKeyboard('suche?')
         dlg.exec()
-        # self.hmi.list_build(['interpret', '', 'interpret', False])
-        # self.hmi.list_save('search')
-        # self.hmi.list_autoplay(False)
+        self.hmi.list_build(['interpret', '', 'interpret', False])
+        self.hmi.list_save('search')
+        self.hmi.list_autoplay(False)
 
     def pb_image(self):
         """ start image-viewer """
         image_list = self.hmi.find_get('image')
-        self.img = FormImage(image_list)
-        self.img.show()
+        img = DialogImage(image_list)
+        img.exec()
 
     def set_status(self, text):
         """ set descripten from image

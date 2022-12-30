@@ -469,14 +469,15 @@ class HmiPlay(DirectPlay):
             scene.addItem(item)
             self.wgt_image.setScene(scene)
 
-    def show_msg(self, text):
+    def show_msg(self, text, head = "Titel beendet"):
         """ show message-box:\n
         text:  text-information\n
+        head:   text header
         return:button clicked
         """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Question)
-        msg.setWindowTitle("Titel beendet")
+        msg.setWindowTitle(head)
         msg.setText(text)
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         return msg.exec_()

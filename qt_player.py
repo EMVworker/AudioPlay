@@ -9,10 +9,10 @@ from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QApplication
 import sys
 
-
 class QtPlayer():
     """ Audio-Player from qt5.QMediaPlayer
-        use for audio-tracks & internet-Radio
+        use for audio-tracks & internet-Radio (only MP3/Wav)
+        GStreamer codecs on Linux, KLite Codecs on Window recommended
     """
     def __init__(self, callback=[None,None,None], interval=500, volume=100):
         """ init Qt5.Media-Player:\n
@@ -176,13 +176,15 @@ if __name__ == '__main__':
     key = ''
     url1 = 'https://f111.rndfnk.com/ard/swr/swr2/live/mp3/256/stream.mp3?aggregator=web&sid=28ew6Usq6cch83eglcsXwLlNRS3&token=Ip5bwQ_T81Lq_mqKc3HUjnxrk94ek2bDcfNyNHuqRGk&tvf=XFsRgyq06xZmMTExLnJuZGZuay5jb20'
     url2 = 'http://channels.webradio.antenne.de/black-beatz'
+    #url2 = "http://stream.radioparadise.com/rock-320"
+    #url2 = 'https://st02.sslstream.dlf.de/dlf/02/128/mp3/stream.mp3'
     help_txt()
     while key != 'q':
         key = input('>>> ?(h=help)')
         if key == '1':
-            print(pg.play('D:/Projekte/PyAudioPlay/AudioPlay_V0/files/test.wav'))
-        if key == '2':
             print(pg.play('D:/Projekte/PyAudioPlay/AudioPlay_V0/files/test1.wav'))
+        if key == '2':
+            print(pg.play('D:/Projekte/PyAudioPlay/AudioPlay_V0/files/test2.wav'))
         if key == '3':
             print(pg.play(url1))
         if key == '4':
@@ -214,5 +216,5 @@ if __name__ == '__main__':
         if key == 'h':
             help_txt()
     print(pg.stop())
-    #sys.exit(app.exec_())
+    sys.exit(app.exec_())
     print('>>>> Audio-Player exit <<<<')

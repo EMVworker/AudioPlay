@@ -11,9 +11,13 @@ sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
 from ctrl_player import HmiPlay
 #import ctrl_player
 import os
+from json_data import JsonData
+from json_data import json_show
+from vlc_player import VlcPlayer
 sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
-from gui_player_V0 import Ui_MainWindow
+from gui_player_V1 import Ui_MainWindow
 from form_image_V1 import Ui_DialogImage
+from diag_rds_V0 import Ui_DialogRds
 from diag_keyboard_V0 import Ui_Keyboard
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
@@ -126,6 +130,95 @@ class DlgKeyboard(QDialog):
         self.ui.leIn_text.setText(text)
 
 
+class DialogRds(QDialog):
+    """ play internet radio-station """
+    def __init__(self, parent=None):
+        """ Image Viewer
+        """
+        super().__init__(parent)
+        self.ui = Ui_DialogRds() # Create an instance of the GUI
+        self.ui.setupUi(self) # Run the .setupUi() method to show the GUI
+        self.ui.pushButtonExit.clicked.connect(self.close)
+        self.ui.pushButtonUp.clicked.connect(self.up)
+        self.ui.pushButtonDown.clicked.connect(self.down)
+        self.ui.listWidgetRds.clicked.connect(self.play)
+        self.ui.pushButtonDel.clicked.connect(self.show_info)
+        self._init = JsonData('RdsPlay.ini')
+        self.rds_nr = 0
+        self.time_change = -1
+        self.data = ['url', 'name', 'genre', 'interpret', 'titel', 'info','time']
+        self.hmi = HmiPlay([None, None,None]) #- remote plaxer & list (TCPIP)
+        self.player = VlcPlayer([None, self.call_pos, None])
+        json_show(self._init.data)
+        #--- List Radio-Station from init 
+        self.ui.listWidgetRds.clear()
+        for item in self._init.data['station']:
+            item = item['name'] + ' [' + item['genre'] + ']'
+            self.ui.listWidgetRds.addItem(item)
+        self.ui.listWidgetRds.setCurrentRow(0)
+        
+    def closeEvent(self, event):
+        """ Close-Event """
+        self.player.stop()
+        print('>>> close RDS-Player', event)
+        event.accept()
+
+    def show_info(self):
+        """ show Infos """
+        text = '[ URL: ]\n ' + self.data[0] + '\n\n[ Infos: ]\n' + self.data[5]
+        self.hmi.show_msg(text, 'Infos Internet-Radio')
+
+    def call_pos(self):
+        position = self.player.get_pos()
+        time = divmod(position/1000, 60)
+        #---  second - tick ---
+        if int(time[1]) != self.time_change:
+            self.time_change = int(time[1])
+            std = divmod(time[0], 60)
+            print ('>>>> rds:Min/Sec', int(time[0]), int(time[1]))
+            self.data = self.player.get_info()
+            self.data.append("{:.2f}".format(std[0] + (1/60*std[1])))
+            self.ui.labelStation.setText(self.data[1])
+            self.ui.labelGenre.setText(self.data[2])
+            self.ui.labelInterpret.setText(self.data[3])
+            self.ui.labelTitel.setText(self.data[4])
+            self.ui.labelInfo.setText('Spielzeit(Std):' + self.data[6] + self.data[5])
+
+    def up(self):
+        """ Radio-Station previue """
+        if self.ui.listWidgetRds.currentRow() - 1 >= 0:
+            self.ui.listWidgetRds.setCurrentRow(self.ui.listWidgetRds.currentRow()-1)
+            self.play()
+
+    def down(self):
+        """ next Radio-Station """
+        len_ = self.ui.listWidgetRds.count()
+        if self.ui.listWidgetRds.currentRow() + 1 < len_:
+            self.ui.listWidgetRds.setCurrentRow(self.ui.listWidgetRds.currentRow()+1)
+            self.play()
+
+    def play(self):
+        """ play Radio-Station """
+        #text = self._init.data['station'][self.ui.listWidgetRds.currentRow()]['name']
+        #text = str(self.ui.listWidgetRds.currentRow())
+        #text = str(self.ui.listWidgetRds.currentItem().text())
+        station = self._init.data['station'][self.ui.listWidgetRds.currentRow()]['http']
+        #self.ui.labelInfo.setText(text)
+        self.player.play(station)
+        self.image_show('D:/Projekte/PyAudioPlay/AudioPlay_V0/files/icon1.gif')
+    
+    def image_show(self, file):
+        """ show the image
+        file:   path + imagename
+        """
+        scene = QtWidgets.QGraphicsScene(self)
+        pixmap = QPixmap(file)
+        pixmap = pixmap.scaled(self.ui.graficesViewPlay.height(), self.ui.graficesViewPlay.width(), \
+                QtCore.Qt.AspectRatioMode.KeepAspectRatio)
+        item = QtWidgets.QGraphicsPixmapItem(pixmap)
+        scene.addItem(item)
+        self.ui.graficesViewPlay.setScene(scene)
+
 
 class DialogImage(QDialog):
     """ cover/bookled-viewer """
@@ -226,6 +319,8 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
         self.ui.pushButtonBack.clicked.connect(self.pb_back)
         self.ui.pushButtonNext.clicked.connect(self.pb_next)
         self.ui.pushButtonUndo.clicked.connect(self.pb_undo)
+        self.ui.pushButtonRadio.clicked.connect(self.pb_radio)
+        self.ui.pushButtonExit.clicked.connect(self.close)
         self.ui.progressBar.setAlignment(QtCore.Qt.AlignCenter)
         self.ui.listWidget.clicked.connect(self.lw_change)
         self.ui.listWidget.doubleClicked.connect(self.pb_play)
@@ -323,6 +418,15 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
         self.hmi.list_ctrl('load')
         self.hmi.show_infos()
         self.hmi.label_face(face='titel')
+
+    def pb_radio(self):
+        """ search CD / Titel """
+        #try:
+        rds = DialogRds()
+        #except:
+        #    self.hmi.show_msg('Error RDS-Initialisierung\n- RdsPlay.ini fehlt\n- ...',\
+        #                      'RadioStation Player')
+        rds.exec()
 
     def pb_search(self):
         """ search CD / Titel """

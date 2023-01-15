@@ -15,6 +15,24 @@ from PyQt5.QtGui import QPixmap
 from song_list import SongList
 from qt_player import QtPlayer
 
+#-------------------------------------------------------------------------
+#------------------------- Global Function -------------------------------
+def show_msg(text, head = "Titel beendet"):
+    """ show message-box:\n
+    text:  text-information\n
+    head:   text header
+    return:button clicked
+    """
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Question)
+    msg.setWindowTitle(head)
+    msg.setText(text)
+    msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    return msg.exec_()
+
+
+#-------------------------------------------------------------------------
+#------------------------------  Classes ---------------------------------
 class DirectPlay():
     """ direct remote player/list for GUI """
     def __init__(self, callback=[None,None,None]):
@@ -469,18 +487,19 @@ class HmiPlay(DirectPlay):
             scene.addItem(item)
             self.wgt_image.setScene(scene)
 
-    def show_msg(self, text, head = "Titel beendet"):
-        """ show message-box:\n
-        text:  text-information\n
-        head:   text header
-        return:button clicked
-        """
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Question)
-        msg.setWindowTitle(head)
-        msg.setText(text)
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        return msg.exec_()
+    #>>>>>>>>>>>>> def as global function <<<<<<<<<<<<<<<<<<<<<
+    # def show_msg(self, text, head = "Titel beendet"):
+    #     """ show message-box:\n
+    #     text:  text-information\n
+    #     head:   text header
+    #     return:button clicked
+    #     """
+    #     msg = QMessageBox()
+    #     msg.setIcon(QMessageBox.Question)
+    #     msg.setWindowTitle(head)
+    #     msg.setText(text)
+    #     msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    #     return msg.exec_()
 
     def end_run(self):
         """ call at end of titel. differentiates between in search / play """
@@ -489,7 +508,7 @@ class HmiPlay(DirectPlay):
             if self.auto is True:
                 if self.list_change_search is True:
                     state = self.list_switch('play', opt='up')
-                    if self.show_msg('Nächste Playlist-Titel ?') == QMessageBox.No:
+                    if show_msg('Nächste Playlist-Titel ?') == QMessageBox.No:
                         state = False
                     self.bar_set()
                 else:

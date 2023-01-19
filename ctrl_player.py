@@ -21,14 +21,19 @@ def show_msg(text, head = "Titel beendet"):
     """ show message-box:\n
     text:  text-information\n
     head:   text header
-    return:button clicked
+    return:'yes', 'no'
     """
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Question)
     msg.setWindowTitle(head)
     msg.setText(text)
     msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    return msg.exec_()
+    value = msg.exec_()
+    if value == QMessageBox.Yes:
+        value = 'yes'
+    if value == QMessageBox.No:
+        value = 'no'
+    return value
 
 
 #-------------------------------------------------------------------------
@@ -508,7 +513,7 @@ class HmiPlay(DirectPlay):
             if self.auto is True:
                 if self.list_change_search is True:
                     state = self.list_switch('play', opt='up')
-                    if show_msg('Nächste Playlist-Titel ?') == QMessageBox.No:
+                    if show_msg('Nächste Playlist-Titel ?') == 'no':
                         state = False
                     self.bar_set()
                 else:

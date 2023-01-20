@@ -141,13 +141,16 @@ class DialogRds(QDialog):
         self.ui.pushButtonUp.clicked.connect(self.up)
         self.ui.pushButtonDown.clicked.connect(self.down)
         self.ui.listWidgetRds.clicked.connect(self.play)
-        self.ui.pushButtonDel.clicked.connect(self.del_tools)
-        self.ui.pushButtonRec.clicked.connect(self.add_record)
+        self.ui.pushButtonDel.clicked.connect(self.info_del)
+        self.ui.pushButtonRec.clicked.connect(self.record_play)
         self.ui.pushButtonMode.clicked.connect(self.change_mode)
         self._init = JsonData('RdsPlay.ini')
-        self.rds_nr = 0
-        self.time_change = -1
-        self.enable = 'rds' #- rds(Internet-Radio) or rec(record)
+        #self.rds_nr = 0
+        #self.time_change = -1
+        #self.titel_change = ""
+        #--- self.ctrl:enable=mode 'rds'or'rec', titel=record-Name, tick=secend-Tick,
+        #---           time=record-start-time, rec=stop/start/play
+        self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop'}
         self.data = ['url', 'name', 'genre', 'interpret', 'titel', 'info','time']
         self.player = VlcPlayer([None, self.call_pos, None])
         json_show(self._init.data)
@@ -159,14 +162,14 @@ class DialogRds(QDialog):
         print('>>> close RDS-Player', event)
         event.accept()
 
-    def del_tools(self):
+    def info_del(self):
         """ mode "rds" = show Infos, mode "rec" del item """
-        if self.enable == 'rds': #- show infos
+        if self.ctrl['enable'] == 'rds': #- show infos
             if self.data[5] == '':
                 self.data[5] = '"Keine Infos verfügbar"'
             text = '[ URL: ]\n ' + self.data[0] + '\n\n[ Infos: ]\n' + self.data[5]
             show_msg(text, 'Infos Internet-Radio')
-        if self.enable == 'rec': #- del item from reclist
+        if self.ctrl['enable'] == 'rec': #- del item from reclist
             if show_msg('Listen-Eintrag wirklich löschen ?', 'Lösche Listen-Eintrag') == 'yes':
                 del self._init.data['record'][self.ui.listWidgetRds.currentRow()]
                 self.ui.listWidgetRds.setCurrentRow(0)
@@ -193,30 +196,31 @@ class DialogRds(QDialog):
     def change_mode(self):
         """ change between Radio-Station and Record 
             - Webdings: »(RDS), ¤(Sample), s(Info), @(Bearbeiten), 4(play), =(record)
+                <(stop)
         """
         self.info_clear()
-        if self.enable == 'rds':#-switch to record-sample
-            self.enable = 'rec'
+        if self.ctrl['enable'] == 'rds':#-switch to record-sample
+            self.ctrl['enable'] = 'rec'
             self.ui.pushButtonRec.setText('4')
             self.ui.pushButtonMode.setText('»')
             self.ui.pushButtonDel.setText('@')
             self.show_record()
         else:
-            if self.enable == 'rec':#- switch to radio-station
-                self.enable = 'rds'
+            if self.ctrl['enable'] == 'rec':#- switch to radio-station
+                self.ctrl['enable'] = 'rds'
                 self.ui.pushButtonRec.setText('=')
                 self.ui.pushButtonMode.setText('¤')
                 self.ui.pushButtonDel.setText('s')
                 self.show_rds()
             else:
-                self.enable == 'rds'
-                print('<ERROR1>:unknow mode: ' + self.enable + '>')
+                self.ctrl['enable'] == 'rds'
+                print('<ERROR1>:unknow mode: ' + self.ctrl['enable'] + '>')
                 raise
-        print('>>>> RDS: aktiv mode = ', self.enable)
+        print('>>>> RDS: aktiv mode = ', self.ctrl['enable'])
 
-    def add_record(self):
-        """ add a new Record-Sample Item """
-        if self.enable == 'rds':#-in rds mode
+    def record_play(self):
+        """ add a new Record-Sample Item / play the record-sample """
+        if self.ctrl['enable'] == 'rds':#-in rds mode
             date = time.localtime()
             date = str(date[2]).rjust(2,'0') + '.' + str(date[1]).rjust(2,'0') +\
                    '.' + str(date[0]) + ' ' +  str(date[3]).rjust(2,'0') +\
@@ -224,29 +228,48 @@ class DialogRds(QDialog):
             item = {"time": date,\
                     "rds": self.data[1],\
              	    "interpret": self.data[3],\
-    	 	        "titel": self.data[4] }
+    	 	        "titel": self.data[4], 
+                    "sample": self.ctrl['titel'] }
             self._init.data['record'].append(item)
+            self.recorder('start')
             self._init.save()
-            self.player.record_start(self.data[3] + '_' + self.data[4])
-        if self.enable == 'rec':#-in record mode
-            pass
+        if self.ctrl['enable'] == 'rec':#-in play sample record mode
+            if self.ctrl['rec'] != 'play':
+                self.recorder('play')
+                self.ui.pushButtonRec.setText('<')
+            else:
+                self.recorder('stop')
+                self.ui.pushButtonRec.setText('4')
 
     def call_pos(self):
         """ read Radio-Station infos all 1xsec"""
         position = self.player.get_pos()
         time = divmod(position/1000, 60)
         #---  second - tick ---
-        if int(time[1]) != self.time_change:
-            self.time_change = int(time[1])
-            std = divmod(time[0], 60)
-            print ('>>>> rds:Min/Sec', int(time[0]), int(time[1]))
-            self.data = self.player.get_info()
-            self.data.append("{:.2f}".format(std[0] + (1/60*std[1])))
-            self.ui.labelStation.setText(self.data[1])
-            self.ui.labelGenre.setText(self.data[2])
-            self.ui.labelInterpret.setText(self.data[3])
-            self.ui.labelTitel.setText(self.data[4])
-            self.ui.labelInfo.setText('Spielzeit(Std):' + self.data[6] + self.data[5])
+        if int(time[1]) != self.ctrl['tick']:
+            if self.ctrl['rec'] != 'play':
+                self.ctrl['tick'] = int(time[1])
+                std = divmod(time[0], 60)
+                self.data = self.player.get_info()
+                self.data.append("{:.2f}".format(std[0] + (1/60*std[1])))
+                self.ui.labelInfo.setText('Spielzeit(Std):' + self.data[6] + self.data[5])
+                #name = str(self.data[3]) + '_' + self.data[4]
+                name = ''.join(char for char in self.data[3] if char.isalnum())
+                name = name + '_' + ''.join(char for char in self.data[4] if char.isalnum())
+                #--- max record-time ---
+                if self.ctrl['rec'] == 'start':
+                    if (time[0] - self.ctrl['time']) > self._init.data['init']['time_rec']:
+                        self.recorder('stop')
+                print ('>>>> rds:Min/Sec/rectime', int(time[0]), int(time[1]),self._init.data['init']['time_rec'])
+                #--- changed interpred / titel ---
+                if name != self.ctrl['titel']:
+                    self.ctrl['titel'] = name
+                    self.recorder('stop')
+                    print('>>>> Interpret / Titel changed <<<<:', name)
+                    self.ui.labelStation.setText(self.data[1])
+                    self.ui.labelGenre.setText(self.data[2])
+                    self.ui.labelInterpret.setText(self.data[3])
+                    self.ui.labelTitel.setText(self.data[4])
 
     def up(self):
         """ Radio-Station previue """
@@ -265,26 +288,29 @@ class DialogRds(QDialog):
         """ play Radio-Station """
         self.info_clear()
         #--- aktivate Radio-Station ---
-        if self.enable == 'rds':
+        if self.ctrl['enable'] == 'rds':
             station = self._init.data['station'][self.ui.listWidgetRds.currentRow()]['http']
             self.player.play(station)
             self.image_show('D:/Projekte/PyAudioPlay/AudioPlay_V0/files/icon1.gif')
         #--- aktivate Recorde-Samples ---
-        if self.enable == 'rec':
+        if self.ctrl['enable'] == 'rec':
             self.ui.labelStation.setText(self._init.data['record']\
                 [self.ui.listWidgetRds.currentRow()]['rds'])
             self.ui.labelGenre.setText('---')
-            self.ui.labelInterpret.setText(self._init.data['record']\
-                [self.ui.listWidgetRds.currentRow()]['interpret'])
-            self.ui.labelTitel.setText(self._init.data['record']\
-                [self.ui.listWidgetRds.currentRow()]['titel'])
+            interpret = self._init.data['record'][self.ui.listWidgetRds.currentRow()]['interpret']
+            self.ui.labelInterpret.setText(interpret)
+            titel = self._init.data['record'][self.ui.listWidgetRds.currentRow()]['titel']
+            self.ui.labelTitel.setText(titel)
             self.ui.labelInfo.setText(self._init.data['record']\
                 [self.ui.listWidgetRds.currentRow()]['time'])
+            name = ''.join(char for char in interpret if char.isalnum())
+            name = name + '_' + ''.join(char for char in titel if char.isalnum())
+            self.ctrl['titel'] = name
 
     def info_clear(self):
         """ clear info section """
         self.player.stop()
-        self.player.record_stop()
+        self.recorder('stop')
         self.ui.labelStation.setText('---')
         self.ui.labelGenre.setText('---')
         self.ui.labelInterpret.setText('---')
@@ -302,6 +328,27 @@ class DialogRds(QDialog):
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
         scene.addItem(item)
         self.ui.graficesViewPlay.setScene(scene)
+        
+    def recorder(self, mode):
+        """ control recorder 
+        mode:   - play  = play record-sample
+                - start = start recording
+                - stop  = stop recording
+        """
+        path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel']
+        print('>>>> rec_file: ', mode, path_file)
+        if mode == 'stop':
+            if self.ctrl['rec'] == 'play':
+                self.player.stop()
+            else:
+                self.player.record_stop()
+            self.ctrl['rec'] = 'stop'
+        if mode == 'start':
+            self.ctrl['rec'] = 'start'
+            self.player.record_start(path_file)
+        if mode == 'play':
+            self.ctrl['rec'] = 'play'
+            self.player.play(path_file + '.mpg')
 
 
 class DialogImage(QDialog):

@@ -145,9 +145,6 @@ class DialogRds(QDialog):
         self.ui.pushButtonRec.clicked.connect(self.record_play)
         self.ui.pushButtonMode.clicked.connect(self.change_mode)
         self._init = JsonData('RdsPlay.ini')
-        #self.rds_nr = 0
-        #self.time_change = -1
-        #self.titel_change = ""
         #--- self.ctrl:enable=mode 'rds'or'rec', titel=record-Name, tick=secend-Tick,
         #---           time=record-start-time, rec=stop/start/play
         self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop'}
@@ -172,6 +169,11 @@ class DialogRds(QDialog):
         if self.ctrl['enable'] == 'rec': #- del item from reclist
             if show_msg('Listen-Eintrag wirklich löschen ?', 'Lösche Listen-Eintrag') == 'yes':
                 del self._init.data['record'][self.ui.listWidgetRds.currentRow()]
+                try:
+                    path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel'] + '.mpg'
+                    os.remove(path_file)
+                except OSError as e:
+                    show_msg('Sample-Datei Fehler:\n"' + str(e) , 'Lösche Listen-Eintrag')
                 self.ui.listWidgetRds.setCurrentRow(0)
                 self._init.save()
                 self.show_record()
@@ -230,16 +232,17 @@ class DialogRds(QDialog):
              	    "interpret": self.data[3],\
     	 	        "titel": self.data[4], 
                     "sample": self.ctrl['titel'] }
-            self._init.data['record'].append(item)
-            self.recorder('start')
+            if self.ctrl['rec'] == 'stop':
+                self._init.data['record'].append(item)
+                self.recorder('start')
+            else:
+                self.recorder('stop')
             self._init.save()
         if self.ctrl['enable'] == 'rec':#-in play sample record mode
             if self.ctrl['rec'] != 'play':
                 self.recorder('play')
-                self.ui.pushButtonRec.setText('<')
             else:
-                self.recorder('stop')
-                self.ui.pushButtonRec.setText('4')
+                self.recorder('end')
 
     def call_pos(self):
         """ read Radio-Station infos all 1xsec"""
@@ -310,7 +313,6 @@ class DialogRds(QDialog):
     def info_clear(self):
         """ clear info section """
         self.player.stop()
-        self.recorder('stop')
         self.ui.labelStation.setText('---')
         self.ui.labelGenre.setText('---')
         self.ui.labelInterpret.setText('---')
@@ -332,23 +334,32 @@ class DialogRds(QDialog):
     def recorder(self, mode):
         """ control recorder 
         mode:   - play  = play record-sample
+                - end   = play end
                 - start = start recording
                 - stop  = stop recording
+        Webdings: »(RDS), ¤(Sample), s(Info), @(Bearbeiten), 4(play), =(record), <(stop)
         """
         path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel']
         print('>>>> rec_file: ', mode, path_file)
         if mode == 'stop':
-            if self.ctrl['rec'] == 'play':
-                self.player.stop()
-            else:
-                self.player.record_stop()
+            self.player.record_stop()
+            self.ui.pushButtonRec.setText('=')
+            self.ui.labelRec.setText('')
             self.ctrl['rec'] = 'stop'
         if mode == 'start':
-            self.ctrl['rec'] = 'start'
             self.player.record_start(path_file)
+            self.ui.pushButtonRec.setText('<')
+            self.ui.labelRec.setStyleSheet('color : red')
+            self.ui.labelRec.setText('Aufnahme läuft !!')
+            self.ctrl['rec'] = 'start'
         if mode == 'play':
-            self.ctrl['rec'] = 'play'
             self.player.play(path_file + '.mpg')
+            self.ui.pushButtonRec.setText('<')
+            self.ctrl['rec'] = 'play'
+        if mode == 'end':
+            self.player.stop()
+            self.ui.pushButtonRec.setText('4')
+            self.ctrl['rec'] = 'end'
 
 
 class DialogImage(QDialog):

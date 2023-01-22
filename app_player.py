@@ -21,6 +21,7 @@ from diag_keyboard_V0 import Ui_Keyboard
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap
+import urllib
 
 
 class DlgKeyboard(QDialog):
@@ -156,7 +157,7 @@ class DialogRds(QDialog):
     def closeEvent(self, event):
         """ Close-Event """
         self.player.stop()
-        print('>>> close RDS-Player', event)
+        #print('>>> close RDS-Player', event)
         event.accept()
 
     def info_del(self):
@@ -168,6 +169,7 @@ class DialogRds(QDialog):
             show_msg(text, 'Infos Internet-Radio')
         if self.ctrl['enable'] == 'rec': #- del item from reclist
             if show_msg('Listen-Eintrag wirklich löschen ?', 'Lösche Listen-Eintrag') == 'yes':
+                self.recorder('end')
                 del self._init.data['record'][self.ui.listWidgetRds.currentRow()]
                 try:
                     path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel'] + '.mpg'
@@ -203,6 +205,8 @@ class DialogRds(QDialog):
         self.info_clear()
         if self.ctrl['enable'] == 'rds':#-switch to record-sample
             self.ctrl['enable'] = 'rec'
+            if self.ctrl['rec'] == 'start':
+                self.recorder('stop')
             self.ui.pushButtonRec.setText('4')
             self.ui.pushButtonMode.setText('»')
             self.ui.pushButtonDel.setText('@')
@@ -210,6 +214,8 @@ class DialogRds(QDialog):
         else:
             if self.ctrl['enable'] == 'rec':#- switch to radio-station
                 self.ctrl['enable'] = 'rds'
+                if self.ctrl['rec'] == 'play':
+                    self.recorder('end')
                 self.ui.pushButtonRec.setText('=')
                 self.ui.pushButtonMode.setText('¤')
                 self.ui.pushButtonDel.setText('s')
@@ -218,7 +224,7 @@ class DialogRds(QDialog):
                 self.ctrl['enable'] == 'rds'
                 print('<ERROR1>:unknow mode: ' + self.ctrl['enable'] + '>')
                 raise
-        print('>>>> RDS: aktiv mode = ', self.ctrl['enable'])
+        #print('>>>> RDS: aktiv mode = ', self.ctrl['enable'])
 
     def record_play(self):
         """ add a new Record-Sample Item / play the record-sample """
@@ -263,7 +269,7 @@ class DialogRds(QDialog):
                 if self.ctrl['rec'] == 'start':
                     if (time[0] - self.ctrl['time']) > self._init.data['init']['time_rec']:
                         self.recorder('stop')
-                print ('>>>> rds:Min/Sec/rectime', int(time[0]), int(time[1]),self._init.data['init']['time_rec'])
+                #print ('>>>> rds:Min/Sec/rectime', int(time[0]), int(time[1]),self._init.data['init']['time_rec'])
                 #--- changed interpred / titel ---
                 if name != self.ctrl['titel']:
                     self.ctrl['titel'] = name
@@ -294,9 +300,10 @@ class DialogRds(QDialog):
         if self.ctrl['enable'] == 'rds':
             station = self._init.data['station'][self.ui.listWidgetRds.currentRow()]['http']
             self.player.play(station)
-            self.image_show('D:/Projekte/PyAudioPlay/AudioPlay_V0/files/icon1.gif')
+            self.image_webshow(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['image'])
         #--- aktivate Recorde-Samples ---
         if self.ctrl['enable'] == 'rec':
+            self.recorder('end')
             self.ui.labelStation.setText(self._init.data['record']\
                 [self.ui.listWidgetRds.currentRow()]['rds'])
             self.ui.labelGenre.setText('---')
@@ -319,12 +326,14 @@ class DialogRds(QDialog):
         self.ui.labelTitel.setText('---')
         self.ui.labelInfo.setText('---')
 
-    def image_show(self, file):
-        """ show the image
-        file:   path + imagename
+    def image_webshow(self, url):
+        """ show the image from web
+        url:   url-adress
         """
+        data = urllib.request.urlopen(url).read()
         scene = QtWidgets.QGraphicsScene(self)
-        pixmap = QPixmap(file)
+        pixmap = QPixmap()
+        pixmap.loadFromData(data)
         pixmap = pixmap.scaled(self.ui.graficesViewPlay.height(), self.ui.graficesViewPlay.width(), \
                 QtCore.Qt.AspectRatioMode.KeepAspectRatio)
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
@@ -340,14 +349,17 @@ class DialogRds(QDialog):
         Webdings: »(RDS), ¤(Sample), s(Info), @(Bearbeiten), 4(play), =(record), <(stop)
         """
         path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel']
-        print('>>>> rec_file: ', mode, path_file)
+        #print('>>>> rec_file: ', mode, path_file)
         if mode == 'stop':
             self.player.record_stop()
+            self.ui.pushButtonRec.setStyleSheet('color : black')
             self.ui.pushButtonRec.setText('=')
+            self.ui.labelRec.setStyleSheet('color : black')
             self.ui.labelRec.setText('')
             self.ctrl['rec'] = 'stop'
         if mode == 'start':
             self.player.record_start(path_file)
+            self.ui.pushButtonRec.setStyleSheet('color : red')
             self.ui.pushButtonRec.setText('<')
             self.ui.labelRec.setStyleSheet('color : red')
             self.ui.labelRec.setText('Aufnahme läuft !!')

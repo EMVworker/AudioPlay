@@ -22,6 +22,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap
 import urllib
+import webbrowser
 
 
 class DlgKeyboard(QDialog):
@@ -147,8 +148,8 @@ class DialogRds(QDialog):
         self.ui.pushButtonMode.clicked.connect(self.change_mode)
         self._init = JsonData('RdsPlay.ini')
         #--- self.ctrl:enable=mode 'rds'or'rec', titel=record-Name, tick=secend-Tick,
-        #---           time=record-start-time, rec=stop/start/play
-        self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop'}
+        #---           time=record-start-time, rec=stop/start/play, rds_time=playtime of rds
+        self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop', 'rds_time': [0,0.0]}
         self.data = ['url', 'name', 'genre', 'interpret', 'titel', 'info','time']
         self.player = VlcPlayer([None, self.call_pos, None])
         json_show(self._init.data)
@@ -165,8 +166,10 @@ class DialogRds(QDialog):
         if self.ctrl['enable'] == 'rds': #- show infos
             if self.data[5] == '':
                 self.data[5] = '"Keine Infos verfügbar"'
-            text = '[ URL: ]\n ' + self.data[0] + '\n\n[ Infos: ]\n' + self.data[5]
-            show_msg(text, 'Infos Internet-Radio')
+            text = '[ URL: ]\n ' + self.data[0] + '\n\n[ Infos: ]\n' + self.data[5] + \
+                   '\n\n>>> Internetseite aufrufen ??? <<<'
+            if show_msg(text, 'Infos Internet-Radio & Webseite') == 'yes':
+                webbrowser.open_new(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web'])
         if self.ctrl['enable'] == 'rec': #- del item from reclist
             if show_msg('Listen-Eintrag wirklich löschen ?', 'Lösche Listen-Eintrag') == 'yes':
                 self.recorder('end')
@@ -233,10 +236,11 @@ class DialogRds(QDialog):
             date = str(date[2]).rjust(2,'0') + '.' + str(date[1]).rjust(2,'0') +\
                    '.' + str(date[0]) + ' ' +  str(date[3]).rjust(2,'0') +\
                    ':' + str(date[4]).rjust(2,'0')
-            item = {"time": date,\
-                    "rds": self.data[1],\
-             	    "interpret": self.data[3],\
+            item = {"time": date,
+                    "rds": self.data[1],
+             	    "interpret": self.data[3],
     	 	        "titel": self.data[4], 
+                    "info": self.data[5],
                     "sample": self.ctrl['titel'] }
             if self.ctrl['rec'] == 'stop':
                 self._init.data['record'].append(item)
@@ -257,12 +261,16 @@ class DialogRds(QDialog):
         #---  second - tick ---
         if int(time[1]) != self.ctrl['tick']:
             if self.ctrl['rec'] != 'play':
+                self.rds_time('rds', self.ui.listWidgetRds.currentRow())
                 self.ctrl['tick'] = int(time[1])
                 std = divmod(time[0], 60)
+                std_float = std[0] + (1/60*std[1])
+                self.rds_time('time', std_float)
+                std_str = "{:.2f}".format(std_float) + ' von ' + \
+                    "{:.2f}".format(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['playtime']) + '\n'
                 self.data = self.player.get_info()
-                self.data.append("{:.2f}".format(std[0] + (1/60*std[1])))
-                self.ui.labelInfo.setText('Spielzeit(Std):' + self.data[6] + self.data[5])
-                #name = str(self.data[3]) + '_' + self.data[4]
+                self.data.append(std_str)
+                self.ui.labelInfo.setText('Spielzeit(Std): ' + self.data[6] + self.data[5])
                 name = ''.join(char for char in self.data[3] if char.isalnum())
                 name = name + '_' + ''.join(char for char in self.data[4] if char.isalnum())
                 #--- max record-time ---
@@ -298,9 +306,11 @@ class DialogRds(QDialog):
         self.info_clear()
         #--- aktivate Radio-Station ---
         if self.ctrl['enable'] == 'rds':
-            station = self._init.data['station'][self.ui.listWidgetRds.currentRow()]['http']
+            current_rds = self.ui.listWidgetRds.currentRow()
+            station = self._init.data['station'][current_rds]['url']
+            self.rds_time('save')
             self.player.play(station)
-            self.image_webshow(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['image'])
+            self.image_webshow(self._init.data['station'][current_rds]['image'])
         #--- aktivate Recorde-Samples ---
         if self.ctrl['enable'] == 'rec':
             self.recorder('end')
@@ -339,7 +349,27 @@ class DialogRds(QDialog):
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
         scene.addItem(item)
         self.ui.graficesViewPlay.setScene(scene)
-        
+
+    def rds_time(self, mode, val = 0):
+        """ handle the radio-station playtime
+        mode:  - rds = set radio-station nr
+               - time = set current playtime
+               - save = save playtime in *.ini
+        """
+        if mode == 'save':
+            #--- save playtime for last station ---
+            last_rds = self.ctrl['rds_time'][0]
+            last_time = self.ctrl['rds_time'][1]
+            if last_time > 0:
+                self._init.data['station'][last_rds]['playtime'] = self._init.data['station'][last_rds]['playtime'] + last_time
+                print('>>>> RDSLast.now/fullplay: ', self.ctrl['rds_time'], self._init.data['station'][last_rds]['playtime'])
+                self._init.save()
+        if mode == 'rds':
+            self.ctrl['rds_time'][0] = val
+        if mode == 'time':
+            self.ctrl['rds_time'][1] = val
+
+
     def recorder(self, mode):
         """ control recorder 
         mode:   - play  = play record-sample

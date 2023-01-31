@@ -152,12 +152,14 @@ class DialogRds(QDialog):
         self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop', 'rds_time': [0,0.0]}
         self.data = ['url', 'name', 'genre', 'interpret', 'titel', 'info','time']
         self.player = VlcPlayer([None, self.call_pos, None])
-        json_show(self._init.data)
+        self.sort_rds()
         self.show_rds()
+        #json_show(self._init.data)
         
     def closeEvent(self, event):
         """ Close-Event """
         self.player.stop()
+        self.rds_time('save')
         #print('>>> close RDS-Player', event)
         event.accept()
 
@@ -191,6 +193,20 @@ class DialogRds(QDialog):
             item = item['name'] + ' [' + item['genre'] + ']'
             self.ui.listWidgetRds.addItem(item)
         self.ui.listWidgetRds.setCurrentRow(0)
+
+    def sort_rds(self):
+        """ sort RDS-Station after playtime """
+        sortlist = []
+        sortdata = []
+        #--- list sorted after playtime ---
+        for count, data in enumerate(self._init.data['station']):
+            sortlist.append([data['playtime'], count])
+        #print('>>>> show_rds: ', sortlist)
+        sortlist.sort(reverse=True)
+        #print('>>>> show_rds: ', sortlist)
+        for index in sortlist:
+            sortdata.append(self._init.data['station'][index[1]])
+        self._init.data['station'] = sortdata
 
     def show_record(self):
         """ show record-List """
@@ -368,7 +384,6 @@ class DialogRds(QDialog):
             self.ctrl['rds_time'][0] = val
         if mode == 'time':
             self.ctrl['rds_time'][1] = val
-
 
     def recorder(self, mode):
         """ control recorder 
@@ -605,11 +620,12 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
 
     def pb_radio(self):
         """ search CD / Titel """
-        try:
-            rds = DialogRds()
-        except Exception as e:
-            show_msg('Fehler in RdsPlay.ini:\n- Datei fehlt ?\n- Falsches Format ?'\
-                     '\n<< PYTHON ERROR:>>\n' + str(e), 'RadioStation Player')
+        rds = DialogRds()
+        # try:
+        #     rds = DialogRds()
+        # except Exception as e:
+        #     show_msg('Fehler in RdsPlay.ini:\n- Datei fehlt ?\n- Falsches Format ?'\
+        #              '\n<< PYTHON ERROR:>>\n' + str(e), 'RadioStation Player')
         rds.exec()
 
     def pb_search(self):

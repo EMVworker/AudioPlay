@@ -22,9 +22,24 @@ from diag_keyboard_V0 import Ui_Keyboard
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap
+import logging
 import urllib
 import webbrowser
 from xml.sax import make_parser, handler
+
+#--- File logger ---
+logging.basicConfig (filename='report.log', filemode='a',\
+     level=logging.INFO, format='%(asctime)-15s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+def printlog(name, error=None):
+    """ basic-logging error - typ OK, ERR(or), SYS(tem)
+    name = error - typ
+    error= description of error --> if none, no logging-save
+    """
+    text ='[ ' + str(name) + ' ]: '
+    if error is not None:
+        text += str(error)
+        logging.info(text)
+    print(text)
 
 
 class DlgKeyboard(QDialog):
@@ -89,7 +104,6 @@ class DlgKeyboard(QDialog):
 
     def closeEvent(self, event):
         """ Close-Event """
-        print('>>> close Dialog', event)
         event.accept()
 
     def form_close(self):
@@ -236,7 +250,6 @@ class DialogRdsFind(QDialog):
         
     def closeEvent(self, event):
         """ Close-Event """
-        print('>>> close RDS-Find: ', event)
         event.accept()
 
     def show_search(self):
@@ -247,6 +260,8 @@ class DialogRdsFind(QDialog):
         self._search['search']['bitrate'] = self.ui.comboBoxRate.currentText()
         self._search['search']['name'] = self.ui.pushButtonName.text()
         self._search['base']['current'] = self.ui.comboBoxBase.currentText()
+        self.ui.labelResult.setText('......Suche: bitte warten')
+        QtWidgets.QApplication.processEvents()
         self.rds = XmlRdsFind(self._init.data)
         self.parser = make_parser()
         self.parser.setContentHandler(self.rds)
@@ -262,7 +277,7 @@ class DialogRdsFind(QDialog):
         url = self.ui.comboBoxBase.currentText()
         self.ui.labelResult.setText(url + '\n......Update: bitte warten')
         QtWidgets.QApplication.processEvents()
-        base = urllib.request.urlopen(url)
+        base = urllib.request.urlopen(url)#- url anfordern
         data = base.read() #- serial url lesen
         #--- save  as binaer-file 
         with open(self._init.data['init']['base']['file'], 'wb') as f:
@@ -278,8 +293,6 @@ class DialogRdsFind(QDialog):
             name = '???'
         del board
         self.ui.pushButtonName.setText(name)
-        #self._search['search']['name'] = name
-        #print('>>> RDS-Update: ')
 
 
 class DialogRds(QDialog):
@@ -294,12 +307,13 @@ class DialogRds(QDialog):
         self.ui.pushButtonUp.clicked.connect(self.up)
         self.ui.pushButtonDown.clicked.connect(self.down)
         self.ui.listWidgetRds.clicked.connect(self.play)
-        self.ui.pushButtonDel.clicked.connect(self.info_del)
+        self.ui.pushButtonDel.clicked.connect(self.del_mode)
         self.ui.pushButtonRec.clicked.connect(self.record_play)
         self.ui.pushButtonMode.clicked.connect(self.change_mode)
         self.ui.pushButtonFind.clicked.connect(self.show_find)
         self.ui.pushButtonEnd.clicked.connect(self.close_find)
         self.ui.pushButtonSave.clicked.connect(self.save_find)
+        self.ui.graficesViewPlay.mousePressEvent = lambda event: self.show_web(event)
         self.ui.pushButtonEnd.setHidden(True)
         self.ui.pushButtonSave.setHidden(True)
         self._init = JsonData('RdsPlay.ini')
@@ -316,11 +330,10 @@ class DialogRds(QDialog):
         """ Close-Event """
         self.player.stop()
         self.rds_time('save')
-        #print('>>> close RDS-Player', event)
         event.accept()
 
-    def info_del(self):
-        """ mode "rds" = show Infos, mode "rec" del item """
+    def show_web(self, event):
+        """ show the web-site """
         if self.ctrl['enable'] == 'rds': #- show infos
             text = '********** Internetseite aufrufen ??? **********'
             text += '[ URL:   ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['url']
@@ -328,19 +341,29 @@ class DialogRds(QDialog):
             text +='\n[ Genre: ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['genre']
             text +='\n[ Web:   ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web']
             text +='\n[ Codec: ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['codec']
-            if self.data[5] != '':
+            if len(self.data[5]) > 1:
                 text +='\n[ Infos: ]\n' + self.data[5]
             if show_msg(text, 'Infos Internet-Radio & Webseite') == 'yes':
                 webbrowser.open_new(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web'])
+
+    def del_mode(self):
+        """ mode "rds" = del item, mode "rec" del item """
+        if self.ctrl['enable'] == 'rds': #- del item from station-list
+            if show_msg('Radio-Station wirklich löschen ?', 'Lösche Radio-Station') == 'yes':
+                self.player.stop()
+                self.recorder('end')
+                del self._init.data['station'][self.ui.listWidgetRds.currentRow()]
+                self._init.save()
+                self.show_rds()
         if self.ctrl['enable'] == 'rec': #- del item from reclist
-            if show_msg('Listen-Eintrag wirklich löschen ?', 'Lösche Listen-Eintrag') == 'yes':
+            if show_msg('Record-Sample wirklich löschen ?', 'Lösche Record-Sample') == 'yes':
                 self.recorder('end')
                 del self._init.data['record'][self.ui.listWidgetRds.currentRow()]
                 try:
                     path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel'] + '.mpg'
                     os.remove(path_file)
                 except OSError as e:
-                    show_msg('Sample-Datei Fehler:\n"' + str(e) , 'Lösche Listen-Eintrag')
+                    show_msg('Sample-Datei Fehler:\n"' + str(e) , 'Lösche Record-Sample')
                 self.ui.listWidgetRds.setCurrentRow(0)
                 self._init.save()
                 self.show_record()
@@ -408,7 +431,7 @@ class DialogRds(QDialog):
         self.ui.listWidgetRds.setCurrentRow(0)
 
     def change_mode(self):
-        """ change between Radio-Station / Record / Find
+        """ change between Radio-Station
             - Webdings: »(RDS), ¤(Sample), s(Info), @(Bearbeiten), 4(play), =(record)
                 <(stop)
         """
@@ -419,7 +442,6 @@ class DialogRds(QDialog):
                 self.recorder('stop')
             self.ui.pushButtonRec.setText('4')
             self.ui.pushButtonMode.setText('»')
-            self.ui.pushButtonDel.setText('@')
             self.ui.graficesViewPlay.setHidden(True)
             self.show_record()
         else:
@@ -429,14 +451,12 @@ class DialogRds(QDialog):
                     self.recorder('end')
                 self.ui.pushButtonRec.setText('=')
                 self.ui.pushButtonMode.setText('¤')
-                self.ui.pushButtonDel.setText('s')
                 self.ui.graficesViewPlay.setHidden(False)
                 self.show_rds()
             else:
                 self.ctrl['enable'] == 'rds'
-                print('<ERROR1>:unknow mode: ' + self.ctrl['enable'] + '>')
+                printlog('ERR unknow mode', self.ctrl['enable'])
                 raise
-        #print('>>>> RDS: aktiv mode = ', self.ctrl['enable'])
 
     def close_find(self):
         """ close RDS-Finder 
@@ -465,7 +485,6 @@ class DialogRds(QDialog):
         self._init.data['station'].append(data)
         self._init.save()
         self.show_rds()
-        #print('>>> save_rds:', data)
 
     def record_play(self):
         """ add a new Record-Sample Item / play the record-sample """
@@ -519,7 +538,7 @@ class DialogRds(QDialog):
                 if name != self.ctrl['titel']:
                     self.ctrl['titel'] = name
                     self.recorder('stop')
-                    print('>>>> Interpret / Titel changed <<<<:', name)
+                    printlog('OK', 'Interpret / Titel changed: ' + name)
                     self.ui.labelStation.setText(self.data[1])
                     self.ui.labelGenre.setText(self.data[2])
                     self.ui.labelInterpret.setText(self.data[3])
@@ -549,11 +568,13 @@ class DialogRds(QDialog):
             try:
                 self.player.play(station)
             except Exception as err:
-                print('[ERROR URL:]', err)
+                printlog('ERR play-url', err)
+                self.player.stop()
             try:
                 self.image_webshow(self._init.data['station'][current_rds]['image'])
             except Exception as err:
-                print('[ERROR IMAGE:]', err)
+                printlog('ERR web-image', err)
+                self.image_webshow(None, self._init.data['init']['image'])
         #--- aktivate Recorde-Samples ---
         if self.ctrl['enable'] == 'rec':
             self.recorder('end')
@@ -578,14 +599,20 @@ class DialogRds(QDialog):
         self.ui.labelTitel.setText('---')
         self.ui.labelInfo.setText('---')
 
-    def image_webshow(self, url):
+    def image_webshow(self, url, err=None):
         """ show the image from web
-        url:   url-adress
+        url:   url-adress, None = err-image
+        err:   error-image
         """
-        data = urllib.request.urlopen(url).read()
         scene = QtWidgets.QGraphicsScene(self)
-        pixmap = QPixmap()
-        pixmap.loadFromData(data)
+        if url is not None: #- load web image
+            data = urllib.request.urlopen(url).read()
+            pixmap = QPixmap()
+            pixmap.loadFromData(data)
+        else: #- load error-image
+            pixmap = QPixmap(err)
+            #pixmap.loadFromData(err)
+        #--- scale image ---
         pixmap = pixmap.scaled(self.ui.graficesViewPlay.height(), self.ui.graficesViewPlay.width(), \
                 QtCore.Qt.AspectRatioMode.KeepAspectRatio)
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
@@ -604,7 +631,6 @@ class DialogRds(QDialog):
             last_time = self.ctrl['rds_time'][1]
             if last_time > 0:
                 self._init.data['station'][last_rds]['playtime'] = self._init.data['station'][last_rds]['playtime'] + last_time
-                #print('>>>> RDSLast.now/fullplay: ', self.ctrl['rds_time'], self._init.data['station'][last_rds]['playtime'])
                 if self.ctrl['find'] is False:
                     self._init.save()
         if mode == 'rds':
@@ -621,7 +647,6 @@ class DialogRds(QDialog):
         Webdings: »(RDS), ¤(Sample), s(Info), @(Bearbeiten), 4(play), =(record), <(stop)
         """
         path_file = self._init.data['init']['path_rec'] + '/' + self.ctrl['titel']
-        #print('>>>> rec_file: ', mode, path_file)
         if mode == 'stop':
             self.player.record_stop()
             self.ui.pushButtonRec.setStyleSheet('color : black')
@@ -671,7 +696,6 @@ class DialogImage(QDialog):
 
     def closeEvent(self, event):
         """ Close-Event """
-        print('>>> close Image', event)
         event.accept()
 
     def image_pager(self, page=True):

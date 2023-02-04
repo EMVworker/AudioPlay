@@ -17,12 +17,14 @@ sys.path.insert(0,'D:/Projekte/PyAudioPlay/AudioPlay_V0/')
 from gui_player_V1 import Ui_MainWindow
 from form_image_V1 import Ui_DialogImage
 from diag_rds_V1 import Ui_DialogRds
+from diag_rds_find_V1 import Ui_DialogRdsFind
 from diag_keyboard_V0 import Ui_Keyboard
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap
 import urllib
 import webbrowser
+from xml.sax import make_parser, handler
 
 
 class DlgKeyboard(QDialog):
@@ -130,11 +132,160 @@ class DlgKeyboard(QDialog):
             text = text + charac
         self.ui.leIn_text.setText(text)
 
+    def get_input(self):
+        """ get keyboard-input """
+        return self.ui.leIn_text.text()
+
+
+class XmlRdsFind(handler.ContentHandler):
+    """ check radiostations from xml-file """
+    def __init__(self, init):
+        """ init XmlRdsFind
+        init =  load init.data
+        """
+        self._search = init['init']['search']
+        self._max_count = init['init']['base']['count']
+        self._rds_count = 0
+        self._rds_nr = 0
+        self._rds_data = []
+
+    def startElement(self, name, attrs):
+        """ callback from SAX
+        name =      Tag-name ( <name>...</name> )
+        attrs =     Atribute-Dictonary (< name attrs="xxx" >)
+        """
+        if name == 'station':
+            self._rds_nr += 1
+            data = self.search_attrs(attrs)
+            #--- founded station ---
+            if data is not False:
+                self._rds_count += 1
+                #--- check range of results ---
+                if self._rds_count <= self._max_count:
+                    # print('---- XML-Tags: ', name + ' Nr.' + str(self._rds_nr) + ' ----')
+                    # print(data)
+                    # print('\n')
+                    self._rds_data.append(data)
+
+    def search_attrs(self, attrs):
+        """ search in SAX-Atribute
+        attrs =     Atribute-Dictonary (< name attrs="xxx" >)
+        return =    Data = finded, False = Not finded
+        """
+        state = True
+        value = ''
+        for key in self._search:
+            if key in attrs:
+                #--- search the values ---
+                value = str(attrs[key])
+                if self._search[key] != '???': #- search enable
+                    #--- search bitrate as numb ---
+                    if key == 'bitrate':
+                        if  int(value) < int(self._search[key]):
+                            state = False
+                            break
+                    #--- search keyword exit ---
+                    else:
+                        value = value.lower()
+                        if value.find(self._search[key].lower()) < 0: #- not find
+                            #print('  *'+ key + ':', value)
+                            state = False
+                            break
+        #--- build RDS-Data ---
+        if state is True:
+            state = {
+                'name': str(attrs['name']),
+                'genre': str(attrs['tags']),
+                'url': str(attrs['url_resolved']),
+                #'url': str(attrs['url']),
+                'image': str(attrs['favicon']),
+                'web': str(attrs['homepage']),
+                'codec': str(attrs['codec']) + ':' +  str(attrs['bitrate']),
+                'playtime': 0.0
+            }
+        return state
+
+    def get_find(self):
+        """ get found stations
+        """
+        return self._rds_data
+
+class DialogRdsFind(QDialog):
+    """ search internet radio-station """
+    def __init__(self, init, parent=None):
+        """ Init
+        """
+        super().__init__(parent)
+        self.ui = Ui_DialogRdsFind() # Create an instance of the GUI
+        self.ui.setupUi(self) # Run the .setupUi() method to show the GUI
+        self.ui.pushButtonExit.clicked.connect(self.close)
+        self.ui.pushButtonOk.clicked.connect(self.show_search)
+        self.ui.pushButtonUpdate.clicked.connect(self.update)
+        self.ui.pushButtonName.clicked.connect(self.keyboard)
+        self._init = init
+        self._search = init.data['init']
+        #--- load last init ---
+        self.ui.comboBoxLand.setCurrentText(self._search['search']['country'])
+        self.ui.comboBoxGenre.setCurrentText(self._search['search']['tags'])
+        self.ui.comboBoxCodec.setCurrentText(self._search['search']['codec'])
+        self.ui.comboBoxRate.setCurrentText(self._search['search']['bitrate'])
+        self.ui.pushButtonName.setText(self._search['search']['name'])
+        self.ui.comboBoxBase.clear()
+        self.ui.comboBoxBase.addItems(self._search['base']['server'])
+        #json_show(self._init.data)
+        
+    def closeEvent(self, event):
+        """ Close-Event """
+        print('>>> close RDS-Find: ', event)
+        event.accept()
+
+    def show_search(self):
+        """ show radiostation """
+        self._search['search']['country'] = self.ui.comboBoxLand.currentText()
+        self._search['search']['tags'] = self.ui.comboBoxGenre.currentText()
+        self._search['search']['codec'] = self.ui.comboBoxCodec.currentText()
+        self._search['search']['bitrate'] = self.ui.comboBoxRate.currentText()
+        self._search['search']['name'] = self.ui.pushButtonName.text()
+        self._search['base']['current'] = self.ui.comboBoxBase.currentText()
+        self.rds = XmlRdsFind(self._init.data)
+        self.parser = make_parser()
+        self.parser.setContentHandler(self.rds)
+        self.parser.parse(self._init.data['init']['base']['file'])
+        self._init.data['station'] = self.rds.get_find()
+        self.ui.labelResult.setText('Gefunden: ' + str(self.rds._rds_count) + \
+            ' von ' + str(self.rds._rds_nr) + ' Stationen')
+        del self.rds
+        del self.parser
+
+    def update(self):
+        """ update radio-Station-database """
+        url = self.ui.comboBoxBase.currentText()
+        self.ui.labelResult.setText(url + '\n......Update: bitte warten')
+        QtWidgets.QApplication.processEvents()
+        base = urllib.request.urlopen(url)
+        data = base.read() #- serial url lesen
+        #--- save  as binaer-file 
+        with open(self._init.data['init']['base']['file'], 'wb') as f:
+            f.write(data)
+        self.ui.labelResult.setText(url + '\n>>>> Update: erfolgreich <<<<')
+
+    def keyboard(self):
+        """ update radio-Station-database """
+        board = DlgKeyboard('')
+        board.exec()
+        name = board.get_input()
+        if name == '':
+            name = '???'
+        del board
+        self.ui.pushButtonName.setText(name)
+        #self._search['search']['name'] = name
+        #print('>>> RDS-Update: ')
+
 
 class DialogRds(QDialog):
     """ play internet radio-station """
     def __init__(self, parent=None):
-        """ Image Viewer
+        """ Init
         """
         super().__init__(parent)
         self.ui = Ui_DialogRds() # Create an instance of the GUI
@@ -146,10 +297,15 @@ class DialogRds(QDialog):
         self.ui.pushButtonDel.clicked.connect(self.info_del)
         self.ui.pushButtonRec.clicked.connect(self.record_play)
         self.ui.pushButtonMode.clicked.connect(self.change_mode)
+        self.ui.pushButtonFind.clicked.connect(self.show_find)
+        self.ui.pushButtonEnd.clicked.connect(self.close_find)
+        self.ui.pushButtonSave.clicked.connect(self.save_find)
+        self.ui.pushButtonEnd.setHidden(True)
+        self.ui.pushButtonSave.setHidden(True)
         self._init = JsonData('RdsPlay.ini')
         #--- self.ctrl:enable=mode 'rds'or'rec', titel=record-Name, tick=secend-Tick,
         #---           time=record-start-time, rec=stop/start/play, rds_time=playtime of rds
-        self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop', 'rds_time': [0,0.0]}
+        self.ctrl = {'enable': 'rds', 'titel': "", 'tick': -1, 'time': 0, 'rec': 'stop', 'rds_time': [0,0.0], 'find': False}
         self.data = ['url', 'name', 'genre', 'interpret', 'titel', 'info','time']
         self.player = VlcPlayer([None, self.call_pos, None])
         self.sort_rds()
@@ -166,10 +322,14 @@ class DialogRds(QDialog):
     def info_del(self):
         """ mode "rds" = show Infos, mode "rec" del item """
         if self.ctrl['enable'] == 'rds': #- show infos
-            if self.data[5] == '':
-                self.data[5] = '"Keine Infos verfügbar"'
-            text = '[ URL: ]\n ' + self.data[0] + '\n\n[ Infos: ]\n' + self.data[5] + \
-                   '\n\n>>> Internetseite aufrufen ??? <<<'
+            text = '********** Internetseite aufrufen ??? **********'
+            text += '[ URL:   ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['url']
+            text +='\n[ Name:  ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['name']
+            text +='\n[ Genre: ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['genre']
+            text +='\n[ Web:   ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web']
+            text +='\n[ Codec: ]\n ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['codec']
+            if self.data[5] != '':
+                text +='\n[ Infos: ]\n' + self.data[5]
             if show_msg(text, 'Infos Internet-Radio & Webseite') == 'yes':
                 webbrowser.open_new(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web'])
         if self.ctrl['enable'] == 'rec': #- del item from reclist
@@ -194,6 +354,39 @@ class DialogRds(QDialog):
             self.ui.listWidgetRds.addItem(item)
         self.ui.listWidgetRds.setCurrentRow(0)
 
+    def show_find(self):
+        """ show search-window """
+        self.player.stop()
+        self.ctrl['find'] = True
+        self.ui.pushButtonEnd.setHidden(False)
+        self.ui.pushButtonSave.setHidden(False)
+        find = DialogRdsFind(self._init)
+        find.exec()
+        del find
+        self.show_rds()
+
+    def show_info(self, stream=None):
+        """ show browser-infos
+        stream = stream-data[6] = Time, stream-data[6] = unknow info
+        """
+        if stream is not None:
+            text = '[Time]: ' + stream[6] + stream[5] # + '\n'
+            #--- add browser-info ---
+            text += '[Name]: ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['name'] + '\n'
+            text += '[Genre]:' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['genre'] + '\n'
+            text += '[Codec]:' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['codec'] + '\n'
+            text += '[Home]: ' + self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web'] + '\n'
+        else:
+            text = self._init.data['record'][self.ui.listWidgetRds.currentRow()]['time'] + '\n'
+            #--- add browser-info ---
+            text += '[RDS]:  ' + self._init.data['record'][self.ui.listWidgetRds.currentRow()]['rds'] + '\n'
+            text += '[INTP]: ' + self._init.data['record'][self.ui.listWidgetRds.currentRow()]['interpret'] + '\n'
+            text += '[TRACK]:' + self._init.data['record'][self.ui.listWidgetRds.currentRow()]['titel'] + '\n'
+            text += '[INFO]: ' + self._init.data['record'][self.ui.listWidgetRds.currentRow()]['info'] + '\n'
+            text += '[SAMPLE]:' + self._init.data['record'][self.ui.listWidgetRds.currentRow()]['sample'] + '\n'
+        self.ui.labelInfo.setText(text)
+        
+
     def sort_rds(self):
         """ sort RDS-Station after playtime """
         sortlist = []
@@ -201,9 +394,7 @@ class DialogRds(QDialog):
         #--- list sorted after playtime ---
         for count, data in enumerate(self._init.data['station']):
             sortlist.append([data['playtime'], count])
-        #print('>>>> show_rds: ', sortlist)
         sortlist.sort(reverse=True)
-        #print('>>>> show_rds: ', sortlist)
         for index in sortlist:
             sortdata.append(self._init.data['station'][index[1]])
         self._init.data['station'] = sortdata
@@ -217,7 +408,7 @@ class DialogRds(QDialog):
         self.ui.listWidgetRds.setCurrentRow(0)
 
     def change_mode(self):
-        """ change between Radio-Station and Record 
+        """ change between Radio-Station / Record / Find
             - Webdings: »(RDS), ¤(Sample), s(Info), @(Bearbeiten), 4(play), =(record)
                 <(stop)
         """
@@ -229,6 +420,7 @@ class DialogRds(QDialog):
             self.ui.pushButtonRec.setText('4')
             self.ui.pushButtonMode.setText('»')
             self.ui.pushButtonDel.setText('@')
+            self.ui.graficesViewPlay.setHidden(True)
             self.show_record()
         else:
             if self.ctrl['enable'] == 'rec':#- switch to radio-station
@@ -238,12 +430,42 @@ class DialogRds(QDialog):
                 self.ui.pushButtonRec.setText('=')
                 self.ui.pushButtonMode.setText('¤')
                 self.ui.pushButtonDel.setText('s')
+                self.ui.graficesViewPlay.setHidden(False)
                 self.show_rds()
             else:
                 self.ctrl['enable'] == 'rds'
                 print('<ERROR1>:unknow mode: ' + self.ctrl['enable'] + '>')
                 raise
         #print('>>>> RDS: aktiv mode = ', self.ctrl['enable'])
+
+    def close_find(self):
+        """ close RDS-Finder 
+        """
+        self.ctrl['enable'] = 'rds'
+        self.ctrl['find'] = False
+        self.ui.pushButtonEnd.setHidden(True) #setEnabled(True)
+        self.ui.pushButtonSave.setHidden(True)
+        self._init = JsonData('RdsPlay.ini')
+        self.show_rds()
+
+    def save_find(self):
+        """ save station to Favorite 
+        """
+        data = {
+            'name': self._init.data['station'][self.ui.listWidgetRds.currentRow()]['name'],
+            'genre': self._init.data['station'][self.ui.listWidgetRds.currentRow()]['genre'],
+            'url': self._init.data['station'][self.ui.listWidgetRds.currentRow()]['url'],
+            #'url': str(attrs['url']),
+            'image': self._init.data['station'][self.ui.listWidgetRds.currentRow()]['image'],
+            'web': self._init.data['station'][self.ui.listWidgetRds.currentRow()]['web'],
+            'codec': self._init.data['station'][self.ui.listWidgetRds.currentRow()]['codec'],
+            'playtime': 0.0
+        }
+        self.close_find()
+        self._init.data['station'].append(data)
+        self._init.save()
+        self.show_rds()
+        #print('>>> save_rds:', data)
 
     def record_play(self):
         """ add a new Record-Sample Item / play the record-sample """
@@ -253,10 +475,10 @@ class DialogRds(QDialog):
                    '.' + str(date[0]) + ' ' +  str(date[3]).rjust(2,'0') +\
                    ':' + str(date[4]).rjust(2,'0')
             item = {"time": date,
-                    "rds": self.data[1],
+                    "rds": self._init.data['station'][self.ui.listWidgetRds.currentRow()]['name'],
              	    "interpret": self.data[3],
     	 	        "titel": self.data[4], 
-                    "info": self.data[5],
+                    "info": self._init.data['station'][self.ui.listWidgetRds.currentRow()]['genre'],
                     "sample": self.ctrl['titel'] }
             if self.ctrl['rec'] == 'stop':
                 self._init.data['record'].append(item)
@@ -282,18 +504,17 @@ class DialogRds(QDialog):
                 std = divmod(time[0], 60)
                 std_float = std[0] + (1/60*std[1])
                 self.rds_time('time', std_float)
-                std_str = "{:.2f}".format(std_float) + ' von ' + \
-                    "{:.2f}".format(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['playtime']) + '\n'
+                std_str = "{:.2f}".format(std_float) + ' + ' + \
+                    "{:.2f}".format(self._init.data['station'][self.ui.listWidgetRds.currentRow()]['playtime']) + ' Std\n'
                 self.data = self.player.get_info()
                 self.data.append(std_str)
-                self.ui.labelInfo.setText('Spielzeit(Std): ' + self.data[6] + self.data[5])
+                self.show_info(self.data)
                 name = ''.join(char for char in self.data[3] if char.isalnum())
                 name = name + '_' + ''.join(char for char in self.data[4] if char.isalnum())
                 #--- max record-time ---
                 if self.ctrl['rec'] == 'start':
                     if (time[0] - self.ctrl['time']) > self._init.data['init']['time_rec']:
                         self.recorder('stop')
-                #print ('>>>> rds:Min/Sec/rectime', int(time[0]), int(time[1]),self._init.data['init']['time_rec'])
                 #--- changed interpred / titel ---
                 if name != self.ctrl['titel']:
                     self.ctrl['titel'] = name
@@ -325,8 +546,14 @@ class DialogRds(QDialog):
             current_rds = self.ui.listWidgetRds.currentRow()
             station = self._init.data['station'][current_rds]['url']
             self.rds_time('save')
-            self.player.play(station)
-            self.image_webshow(self._init.data['station'][current_rds]['image'])
+            try:
+                self.player.play(station)
+            except Exception as err:
+                print('[ERROR URL:]', err)
+            try:
+                self.image_webshow(self._init.data['station'][current_rds]['image'])
+            except Exception as err:
+                print('[ERROR IMAGE:]', err)
         #--- aktivate Recorde-Samples ---
         if self.ctrl['enable'] == 'rec':
             self.recorder('end')
@@ -337,8 +564,7 @@ class DialogRds(QDialog):
             self.ui.labelInterpret.setText(interpret)
             titel = self._init.data['record'][self.ui.listWidgetRds.currentRow()]['titel']
             self.ui.labelTitel.setText(titel)
-            self.ui.labelInfo.setText(self._init.data['record']\
-                [self.ui.listWidgetRds.currentRow()]['time'])
+            self.show_info()
             name = ''.join(char for char in interpret if char.isalnum())
             name = name + '_' + ''.join(char for char in titel if char.isalnum())
             self.ctrl['titel'] = name
@@ -378,8 +604,9 @@ class DialogRds(QDialog):
             last_time = self.ctrl['rds_time'][1]
             if last_time > 0:
                 self._init.data['station'][last_rds]['playtime'] = self._init.data['station'][last_rds]['playtime'] + last_time
-                print('>>>> RDSLast.now/fullplay: ', self.ctrl['rds_time'], self._init.data['station'][last_rds]['playtime'])
-                self._init.save()
+                #print('>>>> RDSLast.now/fullplay: ', self.ctrl['rds_time'], self._init.data['station'][last_rds]['playtime'])
+                if self.ctrl['find'] is False:
+                    self._init.save()
         if mode == 'rds':
             self.ctrl['rds_time'][0] = val
         if mode == 'time':
@@ -407,7 +634,7 @@ class DialogRds(QDialog):
             self.ui.pushButtonRec.setStyleSheet('color : red')
             self.ui.pushButtonRec.setText('<')
             self.ui.labelRec.setStyleSheet('color : red')
-            self.ui.labelRec.setText('Aufnahme läuft !!')
+            self.ui.labelRec.setText('Aufnahme\n läuft !!')
             self.ctrl['rec'] = 'start'
         if mode == 'play':
             self.player.play(path_file + '.mpg')
@@ -621,17 +848,21 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
     def pb_radio(self):
         """ search CD / Titel """
         rds = DialogRds()
+        #rds = DialogRdsFind()
         # try:
         #     rds = DialogRds()
         # except Exception as e:
         #     show_msg('Fehler in RdsPlay.ini:\n- Datei fehlt ?\n- Falsches Format ?'\
         #              '\n<< PYTHON ERROR:>>\n' + str(e), 'RadioStation Player')
         rds.exec()
+        del rds
 
     def pb_search(self):
         """ search CD / Titel """
-        dlg = DlgKeyboard('suche?')
-        dlg.exec()
+        board = DlgKeyboard('suche?')
+        board.exec()
+        text = board.get_input()
+        del board
         self.hmi.list_build(['interpret', '', 'interpret', False])
         self.hmi.list_save('search')
         self.hmi.list_autoplay(False)
@@ -641,6 +872,7 @@ class GuiPlayer(QMainWindow):#, QDialog):#, Ui_MainWindow):
         image_list = self.hmi.find_get('image')
         img = DialogImage(image_list)
         img.exec()
+        del img
 
     def set_status(self, text):
         """ set descripten from image
